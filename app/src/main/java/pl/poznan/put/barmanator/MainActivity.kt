@@ -73,7 +73,7 @@ fun MainScreenPreview() {
 @Composable
 fun MainScreen(drinks: List<Drink>) {
     var selectedTabIndex by remember { mutableStateOf(0) }
-    val tabs = listOf("All", "Favorites", "Tropical", "Strong")
+    val tabs = listOf("Home", "Drinks", "Settings")
 
     Scaffold(
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
@@ -97,15 +97,25 @@ fun MainScreen(drinks: List<Drink>) {
             }
         }
     ) { paddingValues ->
-        ItemList(
-            drinks = when (selectedTabIndex) {
-                0 -> drinks
-                1 -> drinks.filter { it.name.contains("fav", true) }  // Replace with real filtering logic
-                2 -> drinks.filter { it.tagline.contains("Tropical", true) }
-                3 -> drinks.filter { it.tagline.contains("Strong", true) }
-                else -> drinks
-            },
-            modifier = Modifier.padding(paddingValues)
+        when (selectedTabIndex) {
+            0 -> HomeScreen(Modifier.padding(paddingValues))
+            1 -> ItemList(drinks, Modifier.padding(paddingValues))
+            2 -> HomeScreen(Modifier.padding(paddingValues))
+        }
+    }
+}
+
+@Composable
+fun HomeScreen(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        //contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Welcome to Barmanator! 🍹",
+            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
         )
     }
 }
