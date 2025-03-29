@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import pl.poznan.put.barmanator.ui.theme.BarmanatorTheme
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContentProviderCompat.requireContext
 import pl.poznan.put.barmanator.data.Database
@@ -36,7 +38,7 @@ class MainActivity : ComponentActivity() {
 
         database = Database(this)
 
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
         setContent {
             BarmanatorTheme {
                 ItemList(database.getDrinks())
@@ -51,6 +53,7 @@ fun ListItem(drink: Drink) {
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .padding(vertical = 4.dp, horizontal = 8.dp)
+            .clip(RoundedCornerShape(percent = 20))
     ) {
         Column(
             modifier = Modifier
