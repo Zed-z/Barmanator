@@ -37,6 +37,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContentProviderCompat.requireContext
 import pl.poznan.put.barmanator.data.Database
 import pl.poznan.put.barmanator.data.Drink
+import pl.poznan.put.barmanator.screens.DrinkList
+import pl.poznan.put.barmanator.screens.HomeScreen
+import pl.poznan.put.barmanator.screens.Settings
 
 class MainActivity : ComponentActivity() {
 
@@ -99,63 +102,8 @@ fun MainScreen(drinks: List<Drink>) {
     ) { paddingValues ->
         when (selectedTabIndex) {
             0 -> HomeScreen(Modifier.padding(paddingValues))
-            1 -> ItemList(drinks, Modifier.padding(paddingValues))
-            2 -> HomeScreen(Modifier.padding(paddingValues))
-        }
-    }
-}
-
-@Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        //contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "Welcome to Barmanator! 🍹",
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
-        )
-    }
-}
-
-@Composable
-fun ListItem(drink: Drink) {
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier
-            .padding(vertical = 4.dp, horizontal = 8.dp)
-            .clip(RoundedCornerShape(percent = 20))
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(24.dp)
-                .fillMaxWidth()
-        ) {
-            Row {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                ) {
-                    Text(
-                        text = drink.name,
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.ExtraBold
-                        )
-                    )
-                    Text(text = drink.tagline)
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ItemList(drinks: List<Drink>, modifier: Modifier) {
-    LazyColumn(modifier = modifier.fillMaxSize()) {
-        items(drinks) { drink ->
-            ListItem(drink = drink)
+            1 -> DrinkList(drinks, Modifier.padding(paddingValues))
+            2 -> Settings(Modifier.padding(paddingValues))
         }
     }
 }
