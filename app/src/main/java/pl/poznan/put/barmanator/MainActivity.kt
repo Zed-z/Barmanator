@@ -23,6 +23,15 @@ import pl.poznan.put.barmanator.ui.theme.BarmanatorTheme
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -41,9 +50,63 @@ class MainActivity : ComponentActivity() {
         //enableEdgeToEdge()
         setContent {
             BarmanatorTheme {
-                ItemList(database.getDrinks())
+                MainScreen(database.getDrinks())
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    val sampleDrinks = listOf(
+        Drink(1, "Zombie", "Tropical Beast", "Strong and fruity cocktail", "Shake well with ice", "Rum, pineapple juice, lime"),
+        Drink(2, "Mojito", "Refreshing Mint", "Classic Cuban cocktail", "Muddle mint, add rum and soda", "Rum, mint, lime, soda"),
+        Drink(3, "Old Fashioned", "Whiskey Classic", "Smooth and strong", "Stir whiskey with bitters", "Whiskey, sugar, bitters")
+    )
+
+    BarmanatorTheme {
+        MainScreen(drinks = sampleDrinks)
+    }
+}
+
+@Composable
+fun MainScreen(drinks: List<Drink>) {
+    var selectedTabIndex by remember { mutableStateOf(0) }
+    val tabs = listOf("All", "Favorites", "Tropical", "Strong")
+
+    Scaffold(
+        modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
+        topBar = {
+            ScrollableTabRow(
+                selectedTabIndex = selectedTabIndex,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        selected = selectedTabIndex == index,
+                        onClick = { selectedTabIndex = index },
+                        text = { Text(title) }
+                    )
+                }
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { println("Pressed!") }) {
+                Text("Timer")
+            }
+        }
+    ) { paddingValues ->
+        ItemList(
+            drinks = when (selectedTabIndex) {
+                0 -> drinks
+                1 -> drinks.filter { it.name.contains("fav", true) }  // Replace with real filtering logic
+                2 -> drinks.filter { it.tagline.contains("Tropical", true) }
+                3 -> drinks.filter { it.tagline.contains("Strong", true) }
+                else -> drinks
+            },
+            modifier = Modifier.padding(paddingValues)
+        )
     }
 }
 
@@ -79,34 +142,10 @@ fun ListItem(drink: Drink) {
 }
 
 @Composable
-fun ItemList(drinks: List<Drink>) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+fun ItemList(drinks: List<Drink>, modifier: Modifier) {
+    LazyColumn(modifier = modifier.fillMaxSize()) {
         items(drinks) { drink ->
             ListItem(drink = drink)
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BarmanatorTheme {
-        Greeting("Android")
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    BarmanatorTheme {
-        ItemList(emptyList<Drink>())
     }
 }
