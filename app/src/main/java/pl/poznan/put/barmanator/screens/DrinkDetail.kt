@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import pl.poznan.put.barmanator.data.Drink
 
 @Composable
-fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink) {
+fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit) {
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -29,6 +30,9 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
+            Button(onClick = onBack) {
+                Text("Back")
+            }
             Text(text = drink.name, style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold
             ))

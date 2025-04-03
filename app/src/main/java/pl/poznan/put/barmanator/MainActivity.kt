@@ -45,6 +45,7 @@ import pl.poznan.put.barmanator.screens.HomeScreen
 import pl.poznan.put.barmanator.screens.Settings
 import androidx.navigation.compose.*
 import pl.poznan.put.barmanator.screens.DrinkDetail
+import pl.poznan.put.barmanator.screens.DrinkListScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -82,57 +83,40 @@ fun MainScreenPreview() {
 @Composable
 fun MainScreen(drinks: List<Drink>) {
     val navController = rememberNavController()
-    val tabs = listOf("home", "list", "settings") // Use navigation routes for tabs
+
+    val tabs = listOf("home", "list", "settings")
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+    val selectedTabIndex = tabs.indexOf(currentRoute).coerceAtLeast(0)
 
     Scaffold(
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
         topBar = {
-            val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
             ScrollableTabRow(
-                selectedTabIndex = tabs.indexOf(currentRoute).takeIf { it >= 0 } ?: 0,
-                modifier = Modifier.fillMaxWidth()
+                selectedTabIndex = selectedTabIndex
             ) {
                 tabs.forEachIndexed { index, route ->
                     Tab(
-                        selected = currentRoute == route,
-                        onClick = { navController.navigate(route) }, // Navigate instead of updating index
-                        text = { Text(route.replaceFirstChar { it.uppercase() }) } // Capitalize first letter
+                        selected = selectedTabIndex == index,
+                        onClick = { navController.navigate(route) },
+                        text = { Text(route) }
                     )
                 }
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { println("Pressed!") }) {
-                Text("Timer")
             }
         }
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = "home", // Make sure it starts at home
+            startDestination = "home",
             modifier = Modifier.padding(paddingValues)
         ) {
             composable("home") {
                 HomeScreen(Modifier.padding(paddingValues))
             }
             composable("list") {
-                DrinkList(
-                    drinks,
-                    onDrinkClick = { drinkId -> navController.navigate("detail/$drinkId") },
-                    modifier = Modifier.padding(paddingValues)
-                )
+                DrinkListScreen(drinks, Modifier.padding(paddingValues))
             }
             composable("settings") {
                 Settings(Modifier.padding(paddingValues))
-            }
-            composable("detail/{drinkId}") { backStackEntry ->
-                val drinkId = backStackEntry.arguments?.getString("drinkId")?.toLongOrNull()
-                val drink = drinks.find { it.id == drinkId }
-                if (drink != null) {
-                    DrinkDetail(Modifier.padding(paddingValues), drink)
-                } else {
-                    Text("Drink not found!")
-                }
             }
         }
     }
