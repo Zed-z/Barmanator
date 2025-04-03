@@ -53,10 +53,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         database = Database(this)
+
         runBlocking {
             launch{
-            database.queryCocktailAPI()
-        }
+                database.queryCocktailAPI()
+            }
         }
 
         //enableEdgeToEdge()
