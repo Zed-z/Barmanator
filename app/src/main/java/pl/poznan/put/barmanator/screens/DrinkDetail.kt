@@ -36,13 +36,9 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit)
             Text(text = drink.name, style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold
             ))
-            Text(text = drink.tagline, style = MaterialTheme.typography.bodyLarge)
+            Text(text = drink.category, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "Description: ${drink.description}")
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Preparation: ${drink.preparation}")
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Ingredients: ${drink.ingredients}")
+            Text(text = drink.instructions)
         }
     }
 }

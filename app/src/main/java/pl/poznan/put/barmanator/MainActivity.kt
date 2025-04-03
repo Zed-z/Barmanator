@@ -76,9 +76,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreenPreview() {
     val sampleDrinks = listOf(
-        Drink(1, "Zombie", "Tropical Beast", "Strong and fruity cocktail", "Shake well with ice", "Rum, pineapple juice, lime"),
-        Drink(2, "Mojito", "Refreshing Mint", "Classic Cuban cocktail", "Muddle mint, add rum and soda", "Rum, mint, lime, soda"),
-        Drink(3, "Old Fashioned", "Whiskey Classic", "Smooth and strong", "Stir whiskey with bitters", "Whiskey, sugar, bitters")
+        Drink(1, "Zombie", "Strong", "Shake well with ice"),
+        Drink(2, "Mojito", "Classic", "Muddle mint, add rum and soda"),
+        Drink(3, "Old Fashioned", "Smooth", "Stir whiskey with bitters")
     )
 
     BarmanatorTheme {

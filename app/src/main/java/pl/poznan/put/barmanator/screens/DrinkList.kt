@@ -48,7 +48,7 @@ fun DrinkListItem(drink: Drink, onClick: () -> Unit) {
                             fontWeight = FontWeight.ExtraBold
                         )
                     )
-                    Text(text = drink.tagline)
+                    Text(text = drink.category)
                 }
             }
         }
