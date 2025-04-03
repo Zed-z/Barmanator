@@ -1,10 +1,16 @@
 package pl.poznan.put.barmanator.data
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.widget.Toast
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -12,9 +18,9 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.client.plugins.contentnegotiation.*
 import kotlinx.serialization.*
+import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.json.Json
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import io.ktor.client.*
@@ -30,6 +36,18 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import kotlinx.coroutines.*
 
+
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
+data class CocktailResponse(
+    val drinks: List<Cocktail>
+)
+
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
+data class Cocktail(
+    val idDrink: Long
+)
 
 data class Drink (
     val id: Long,
@@ -144,47 +162,40 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
         return data
     }
 
+    private val jsonSettings = Json { ignoreUnknownKeys = true; prettyPrint = true; isLenient = true }
+
     suspend fun queryCocktailAPI() {
         // Create a Ktor client
         val client = HttpClient(CIO) {
             install(ContentNegotiation) {
-                json(Json { prettyPrint = true; isLenient = true })
-
-            }
-
-            defaultRequest {
-                header(HttpHeaders.UserAgent, "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0")
+                json(jsonSettings)
             }
         }
 
-      //  val response: HttpResponse =
-         //  client.get("www.thecocktaildb.com/api/json/v1/1/search.php?f=b" )
-//        println("BBB")
-//        for (firstletter in 'a'..'z') {
-//            println("CCC")
-//
-//            // Make the request to Overpass API
-           try {
-               println("BBB")
-               val response: HttpResponse =
-                    client.get("www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita" )
+        for (letter in 'a'..'z') {
+            try {
+                println("BBB")
+                val response: HttpResponse =
+                    client.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?f=$letter") {
+                        contentType(ContentType.Application.Json)
+                    }
                 println("DDD")
                 // Parse response
                 if (response.status == HttpStatusCode.OK) {
                     val responseBody = response.bodyAsText()
                     println("Response: $responseBody")
-                    val result = Json.decodeFromString<JsonElement>(responseBody)
-                    println("Parsed Result: $result")
+                    val result = jsonSettings.decodeFromString<CocktailResponse>(responseBody)
+                    println("Parsed Result: ${result.drinks}")
                 } else {
                     println("Request failed with status: ${response.status}")
                 }
             } catch (e: Exception) {
                 println("Error occurred: ${e.localizedMessage}")
             }
-//        }
-//        client.close()
-    }
+        }
 
+        client.close()
+    }
 }
 
 
