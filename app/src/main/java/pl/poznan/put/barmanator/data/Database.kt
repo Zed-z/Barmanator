@@ -35,6 +35,11 @@ import io.ktor.client.statement.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import kotlinx.coroutines.*
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import kotlinx.serialization.Serializable
+import java.sql.PreparedStatement
 
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -44,9 +49,50 @@ data class CocktailResponse(
 )
 
 @SuppressLint("UnsafeOptInUsageError")
+@Entity(tableName = "cocktails")
 @Serializable
-data class Cocktail(
-    val idDrink: Long
+data class Cocktail (
+        @PrimaryKey val idDrink: Long,
+        val strDrink: String?,
+        val strCategory: String?,
+        val strAlcoholic: String?,
+        val strGlass: String?,
+        val strInstructions: String?,
+        val strDrinkThumb: String?,
+        val strIngredient1: String?,
+        val strIngredient2: String?,
+        val strIngredient3: String?,
+        val strIngredient4: String?,
+        val strIngredient5: String?,
+        val strIngredient6: String?,
+        val strIngredient7: String?,
+        val strIngredient8: String?,
+        val strIngredient9: String?,
+        val strIngredient10: String?,
+        val strIngredient11: String?,
+        val strIngredient12: String?,
+        val strIngredient13: String?,
+        val strIngredient14: String?,
+        val strIngredient15:String?,
+        val strMeasure1: String?,
+        val strMeasure2: String?,
+        val strMeasure3: String?,
+        val strMeasure4: String?,
+        val strMeasure5: String?,
+        val strMeasure6: String?,
+        val strMeasure7: String?,
+        val strMeasure8: String?,
+        val strMeasure9: String?,
+        val strMeasure10: String?,
+        val strMeasure11: String?,
+        val strMeasure12: String?,
+        val strMeasure13: String?,
+        val strMeasure14: String?,
+        val strMeasure15: String?,
+
+
+        val strCreativeCommonsConfirmed: String?,
+
 )
 
 data class Drink (
@@ -58,34 +104,107 @@ data class Drink (
     val ingredients: String,
 )
 
+class CocktailDatabase
+
+
 class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1) {
     companion object {
         private const val DATABASE_NAME = "database.db"
         private const val DATABASE_VERSION = 1
 
         const val TABLE_NAME = "Drinks"
-        const val COLUMN_ID = "id"
-        const val COLUMN_NAME = "name"
-        const val COLUMN_TAGLINE = "tagline"
-        const val COLUMN_DESCRIPTION = "description"
-        const val COLUMN_PREPARATION = "preparation"
-        const val COLUMN_INGREDIENTS = "ingredients"
+
+        const val IDDRINK = "idDrink"
+        const val STRDRINK = "strDrink"
+        const val STRCATEGORY = "strCategory"
+        const val STRALCOHOLIC = "strAlcoholic"
+        const val STRGLASS = "strGlass"
+        const val STRINSTRUCTIONS = "strInstructions"
+        const val STRDRINKTHUMB = "strDrinkThumb"
+        const val STRINGREDIENT1 = "strIngredient1"
+        const val STRINGREDIENT2 = "strIngredient2"
+        const val STRINGREDIENT3 = "strIngredient3"
+        const val STRINGREDIENT4 = "strIngredient4"
+        const val STRINGREDIENT5 = "strIngredient5"
+        const val STRINGREDIENT6 = "strIngredient6"
+        const val STRINGREDIENT7 = "strIngredient7"
+        const val STRINGREDIENT8 = "strIngredient8"
+        const val STRINGREDIENT9 = "strIngredient9"
+        const val STRINGREDIENT10 = "strIngredient10"
+        const val STRINGREDIENT11 = "strIngredient11"
+        const val STRINGREDIENT12 = "strIngredient12"
+        const val STRINGREDIENT13 = "strIngredient13"
+        const val STRINGREDIENT14 = "strIngredient14"
+        const val STRINGREDIENT15 = "strIngredient15"
+        const val STRMEASURE1 = "strMeasure1"
+        const val STRMEASURE2 = "strMeasure2"
+        const val STRMEASURE3 = "strMeasure3"
+        const val STRMEASURE4 = "strMeasure4"
+        const val STRMEASURE5 = "strMeasure5"
+        const val STRMEASURE6 = "strMeasure6"
+        const val STRMEASURE7 = "strMeasure7"
+        const val STRMEASURE8 = "strMeasure8"
+        const val STRMEASURE9 = "strMeasure9"
+        const val STRMEASURE10 = "strMeasure10"
+        const val STRMEASURE11 = "strMeasure11"
+        const val STRMEASURE12 = "strMeasure12"
+        const val STRMEASURE13 = "strMeasure13"
+        const val STRMEASURE14 = "strMeasure14"
+        const val STRMEASURE15 = "strMeasure15"
+        const val STRCREATIVECOMMONSCONFIRMED = "strCreativeCommonsConfirmed"
+
     }
 
     override fun onCreate(db: SQLiteDatabase)  {
         val query = """
             CREATE TABLE $TABLE_NAME (
-                $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                $COLUMN_NAME TEXT NOT NULL,
-                $COLUMN_TAGLINE TEXT NOT NULL,
-                $COLUMN_DESCRIPTION TEXT NOT NULL,
-                $COLUMN_PREPARATION TEXT NOT NULL,
-                $COLUMN_INGREDIENTS TEXT NOT NULL
+                $IDDRINK INTEGER PRIMARY KEY,
+                $STRDRINK TEXT ,
+$STRCATEGORY TEXT ,
+$STRALCOHOLIC TEXT ,
+$STRGLASS TEXT ,
+$STRINSTRUCTIONS TEXT ,
+$STRDRINKTHUMB TEXT ,
+$STRINGREDIENT1 TEXT ,
+$STRINGREDIENT2 TEXT ,
+$STRINGREDIENT3 TEXT ,
+$STRINGREDIENT4 TEXT ,
+$STRINGREDIENT5 TEXT ,
+$STRINGREDIENT6 TEXT ,
+$STRINGREDIENT7 TEXT ,
+$STRINGREDIENT8 TEXT ,
+$STRINGREDIENT9 TEXT ,
+$STRINGREDIENT10 TEXT ,
+$STRINGREDIENT11 TEXT ,
+$STRINGREDIENT12 TEXT ,
+$STRINGREDIENT13 TEXT ,
+$STRINGREDIENT14 TEXT ,
+$STRINGREDIENT15 TEXT ,
+$STRMEASURE1 TEXT ,
+$STRMEASURE2 TEXT ,
+$STRMEASURE3 TEXT ,
+$STRMEASURE4 TEXT ,
+$STRMEASURE5 TEXT ,
+$STRMEASURE6 TEXT ,
+$STRMEASURE7 TEXT ,
+$STRMEASURE8 TEXT ,
+$STRMEASURE9 TEXT ,
+$STRMEASURE10 TEXT ,
+$STRMEASURE11 TEXT ,
+$STRMEASURE12 TEXT ,
+$STRMEASURE13 TEXT ,
+$STRMEASURE14 TEXT ,
+$STRMEASURE15 TEXT ,
+$STRCREATIVECOMMONSCONFIRMED TEXT 
             )
         """.trimIndent()
         db.execSQL(query)
 
 
+        val insertQuerry = """
+            INSERT INTO $TABLE_NAME(STRDRINK, STRCATEGORY, STRALCOHOLIC, STRGLASS, STRINSTRUCTIONS, STRDRINKTHUMB, STRINGREDIENT1, STRINGREDIENT2, STRINGREDIENT3, STRINGREDIENT4, STRINGREDIENT5, STRINGREDIENT6, STRINGREDIENT7, STRINGREDIENT8, STRINGREDIENT9, STRINGREDIENT10, STRINGREDIENT11, STRINGREDIENT12, STRINGREDIENT13, STRINGREDIENT14, STRINGREDIENT15, STRMEASURE1, STRMEASURE2, STRMEASURE3, STRMEASURE4, STRMEASURE5, STRMEASURE6, STRMEASURE7, STRMEASURE8, STRMEASURE9, STRMEASURE10, STRMEASURE11, STRMEASURE12, STRMEASURE13, STRMEASURE14, STRMEASURE15, STRCREATIVECOMMONSCONFIRMED)""".trimIndent()
+
+        
 
         
         db.insert(TABLE_NAME, null,   ContentValues().apply { put(COLUMN_NAME,"Zombie"); put(COLUMN_TAGLINE," Tropikalny potwór"); put(COLUMN_DESCRIPTION," Zombie to jeden z najbardziej intensywnych koktajli, który łączy kilka rodzajów rumu z owocowymi sokami i likierami. Jest mocny, pełen smaku i bardzo orzeźwiający."); put(COLUMN_PREPARATION," Przygotowanie: Wymieszaj rum, sok ananasowy, sok z limonki, grenadynę, maraschino i angosturę w shakerze z lodem, przelej do szklanki."); put(COLUMN_INGREDIENTS," Składniki: 30 ml białego rumu, 30 ml ciemnego rumu, 15 ml rumu overproof, 50 ml soku ananasowego, 25 ml soku z limonki, 10 ml grenadyny, 10 ml likieru maraschino, 2-3 krople angostury, kostki lodu")})
@@ -145,22 +264,24 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
 
     fun getDrinks(): List<Drink> {
         val data = mutableListOf<Drink>()
-        val cursor: Cursor = readableDatabase.query(TABLE_NAME, null, null, null, null, null, "$COLUMN_ID ASC")
-        with(cursor) {
-            while (moveToNext()) {
-                val id = getLong(getColumnIndexOrThrow(COLUMN_ID))
-                val name = getString(getColumnIndexOrThrow(COLUMN_NAME))
-                val tagline = getString(getColumnIndexOrThrow(COLUMN_TAGLINE))
-                val description = getString(getColumnIndexOrThrow(COLUMN_DESCRIPTION))
-                val preparation = getString(getColumnIndexOrThrow(COLUMN_PREPARATION))
-                val ingredients = getString(getColumnIndexOrThrow(COLUMN_INGREDIENTS))
-
-                data.add(Drink(id, name, tagline, description, preparation, ingredients))
-            }
-        }
-        cursor.close()
+//        val cursor: Cursor = readableDatabase.query(TABLE_NAME, null, null, null, null, null, "$COLUMN_ID ASC")
+//        with(cursor) {
+//            while (moveToNext()) {
+//                val id = getLong(getColumnIndexOrThrow(COLUMN_ID))
+//                val name = getString(getColumnIndexOrThrow(COLUMN_NAME))
+//                val tagline = getString(getColumnIndexOrThrow(COLUMN_TAGLINE))
+//                val description = getString(getColumnIndexOrThrow(COLUMN_DESCRIPTION))
+//                val preparation = getString(getColumnIndexOrThrow(COLUMN_PREPARATION))
+//                val ingredients = getString(getColumnIndexOrThrow(COLUMN_INGREDIENTS))
+//
+//                data.add(Drink(id, name, tagline, description, preparation, ingredients))
+//            }
+//        }
+//        cursor.close()
         return data
     }
+
+
 
     private val jsonSettings = Json { ignoreUnknownKeys = true; prettyPrint = true; isLenient = true }
 
@@ -179,13 +300,59 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                     client.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?f=$letter") {
                         contentType(ContentType.Application.Json)
                     }
-                println("DDD")
                 // Parse response
                 if (response.status == HttpStatusCode.OK) {
                     val responseBody = response.bodyAsText()
                     println("Response: $responseBody")
                     val result = jsonSettings.decodeFromString<CocktailResponse>(responseBody)
                     println("Parsed Result: ${result.drinks}")
+
+                    for (cocktail in result.drinks) {
+
+
+                        val values = ContentValues().apply {
+                            put("idDrink", cocktail.idDrink)
+                            put("strDrink", cocktail.strDrink)
+                            put("strCategory", cocktail.strCategory)
+                            put("strAlcoholic", cocktail.strAlcoholic)
+                            put("strGlass", cocktail.strGlass)
+                            put("strInstructions", cocktail.strInstructions)
+                            put("strDrinkThumb", cocktail.strDrinkThumb)
+                            put("strIngredient1", cocktail.strIngredient1)
+                            put("strIngredient2", cocktail.strIngredient2)
+                            put("strIngredient3", cocktail.strIngredient3)
+                            put("strIngredient4", cocktail.strIngredient4)
+                            put("strIngredient5", cocktail.strIngredient5)
+                            put("strIngredient6", cocktail.strIngredient6)
+                            put("strIngredient7", cocktail.strIngredient7)
+                            put("strIngredient8", cocktail.strIngredient8)
+                            put("strIngredient9", cocktail.strIngredient9)
+                            put("strIngredient10", cocktail.strIngredient10)
+                            put("strIngredient11", cocktail.strIngredient11)
+                            put("strIngredient12", cocktail.strIngredient12)
+                            put("strIngredient13", cocktail.strIngredient13)
+                            put("strIngredient14", cocktail.strIngredient14)
+                            put("strIngredient15", cocktail.strIngredient15)
+                            put("strMeasure1", cocktail.strMeasure1)
+                            put("strMeasure2", cocktail.strMeasure2)
+                            put("strMeasure3", cocktail.strMeasure3)
+                            put("strMeasure4", cocktail.strMeasure4)
+                            put("strMeasure5", cocktail.strMeasure5)
+                            put("strMeasure6", cocktail.strMeasure6)
+                            put("strMeasure7", cocktail.strMeasure7)
+                            put("strMeasure8", cocktail.strMeasure8)
+                            put("strMeasure9", cocktail.strMeasure9)
+                            put("strMeasure10", cocktail.strMeasure10)
+                            put("strMeasure11", cocktail.strMeasure11)
+                            put("strMeasure12", cocktail.strMeasure12)
+                            put("strMeasure13", cocktail.strMeasure13)
+                            put("strMeasure14", cocktail.strMeasure14)
+                            put("strMeasure15", cocktail.strMeasure15)
+                            put("strCreativeCommonsConfirmed", cocktail.strCreativeCommonsConfirmed)
+                        }
+
+                        writableDatabase.insert(TABLE_NAME,null,values)
+                    }
                 } else {
                     println("Request failed with status: ${response.status}")
                 }
