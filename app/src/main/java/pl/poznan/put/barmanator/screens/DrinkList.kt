@@ -1,5 +1,6 @@
 package pl.poznan.put.barmanator.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,12 +20,13 @@ import androidx.compose.ui.unit.dp
 import pl.poznan.put.barmanator.data.Drink
 
 @Composable
-fun DrinkListItem(drink: Drink) {
+fun DrinkListItem(drink: Drink, onClick: () -> Unit) {
     Surface(
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .padding(vertical = 4.dp, horizontal = 8.dp)
             .clip(RoundedCornerShape(percent = 20))
+            .clickable { onClick() }
     ) {
         Column(
             modifier = Modifier
@@ -50,10 +52,10 @@ fun DrinkListItem(drink: Drink) {
 }
 
 @Composable
-fun DrinkList(drinks: List<Drink>, modifier: Modifier) {
+fun DrinkList(drinks: List<Drink>, modifier: Modifier, onDrinkClick: (Long) -> Unit) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
         items(drinks) { drink ->
-            DrinkListItem(drink = drink)
+            DrinkListItem(drink = drink, onClick = { onDrinkClick(drink.id) })
         }
     }
 }

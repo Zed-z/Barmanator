@@ -43,6 +43,8 @@ import pl.poznan.put.barmanator.data.Drink
 import pl.poznan.put.barmanator.screens.DrinkList
 import pl.poznan.put.barmanator.screens.HomeScreen
 import pl.poznan.put.barmanator.screens.Settings
+import androidx.navigation.compose.*
+import pl.poznan.put.barmanator.screens.DrinkDetail
 
 class MainActivity : ComponentActivity() {
 
@@ -53,11 +55,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         database = Database(this)
-        runBlocking {
-            launch{
-            database.queryCocktailAPI()
-        }
-        }
 
         //enableEdgeToEdge()
         setContent {
@@ -84,21 +81,22 @@ fun MainScreenPreview() {
 
 @Composable
 fun MainScreen(drinks: List<Drink>) {
-    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
-    val tabs = listOf("Home", "Drinks", "Settings")
+    val navController = rememberNavController()
+    val tabs = listOf("home", "list", "settings") // Use navigation routes for tabs
 
     Scaffold(
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
         topBar = {
+            val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
             ScrollableTabRow(
-                selectedTabIndex = selectedTabIndex,
+                selectedTabIndex = tabs.indexOf(currentRoute).takeIf { it >= 0 } ?: 0,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                tabs.forEachIndexed { index, title ->
+                tabs.forEachIndexed { index, route ->
                     Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
-                        text = { Text(title) }
+                        selected = currentRoute == route,
+                        onClick = { navController.navigate(route) }, // Navigate instead of updating index
+                        text = { Text(route.replaceFirstChar { it.uppercase() }) } // Capitalize first letter
                     )
                 }
             }
@@ -109,10 +107,34 @@ fun MainScreen(drinks: List<Drink>) {
             }
         }
     ) { paddingValues ->
-        when (selectedTabIndex) {
-            0 -> HomeScreen(Modifier.padding(paddingValues))
-            1 -> DrinkList(drinks, Modifier.padding(paddingValues))
-            2 -> Settings(Modifier.padding(paddingValues))
+        NavHost(
+            navController = navController,
+            startDestination = "home", // Make sure it starts at home
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            composable("home") {
+                HomeScreen(Modifier.padding(paddingValues))
+            }
+            composable("list") {
+                DrinkList(
+                    drinks,
+                    onDrinkClick = { drinkId -> navController.navigate("detail/$drinkId") },
+                    modifier = Modifier.padding(paddingValues)
+                )
+            }
+            composable("settings") {
+                Settings(Modifier.padding(paddingValues))
+            }
+            composable("detail/{drinkId}") { backStackEntry ->
+                val drinkId = backStackEntry.arguments?.getString("drinkId")?.toLongOrNull()
+                val drink = drinks.find { it.id == drinkId }
+                if (drink != null) {
+                    DrinkDetail(Modifier.padding(paddingValues), drink)
+                } else {
+                    Text("Drink not found!")
+                }
+            }
         }
     }
 }
+

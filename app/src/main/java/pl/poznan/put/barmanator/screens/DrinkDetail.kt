@@ -1,0 +1,44 @@
+package pl.poznan.put.barmanator.screens
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import pl.poznan.put.barmanator.data.Drink
+
+@Composable
+fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink) {
+    Scaffold(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Text(text = drink.name, style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.ExtraBold
+            ))
+            Text(text = drink.tagline, style = MaterialTheme.typography.bodyLarge)
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(text = "Description: ${drink.description}")
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Preparation: ${drink.preparation}")
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Ingredients: ${drink.ingredients}")
+        }
+    }
+}
