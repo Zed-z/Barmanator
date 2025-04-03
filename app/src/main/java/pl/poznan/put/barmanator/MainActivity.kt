@@ -35,6 +35,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import pl.poznan.put.barmanator.data.Database
 import pl.poznan.put.barmanator.data.Drink
 import pl.poznan.put.barmanator.screens.DrinkList
@@ -46,9 +49,15 @@ class MainActivity : ComponentActivity() {
     private lateinit var database: Database
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
         database = Database(this)
+        runBlocking {
+            launch{
+            database.queryCocktailAPI()
+        }
+        }
 
         //enableEdgeToEdge()
         setContent {
