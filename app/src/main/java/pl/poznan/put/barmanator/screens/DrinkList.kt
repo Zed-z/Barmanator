@@ -22,6 +22,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import pl.poznan.put.barmanator.data.Drink
+import android.content.res.Configuration
+import androidx.compose.ui.platform.LocalConfiguration
 
 @Composable
 fun DrinkListItem(drink: Drink, onClick: () -> Unit) {
@@ -66,22 +68,55 @@ fun DrinkList(drinks: List<Drink>, modifier: Modifier, onDrinkClick: (Long) -> U
 
 @Composable
 fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier) {
-    var selectedDrinkId by rememberSaveable { mutableStateOf<Long?>(null) }
+    val configuration  = LocalConfiguration.current
+    val isTablet = configuration.screenWidthDp >= 600
 
-    if (selectedDrinkId == null) {
-        // Show list when no drink is selected
-        DrinkList(drinks, onDrinkClick = { selectedDrinkId = it }, modifier = modifier)
-    } else {
-        // Show details when a drink is selected
-        val drink = drinks.find { it.id == selectedDrinkId }
-        if (drink != null) {
-            DrinkDetail(
-                modifier,
-                drink,
-                onBack = { selectedDrinkId = null } // Back button returns to list
-            )
+    var selectedDrinkHistory by rememberSaveable { mutableStateOf(listOf(drinks.firstOrNull()?.id)) }
+    val selectedDrinkId = selectedDrinkHistory.lastOrNull()
+
+    Row(modifier.fillMaxSize()) {
+
+        DrinkList(
+            drinks,
+            onDrinkClick = { drinkId ->
+                selectedDrinkHistory = selectedDrinkHistory + drinkId
+            },
+            modifier = modifier.weight(1f))
+
+        if (isTablet) {
+            selectedDrinkId?.let { id ->
+                val drink = drinks.find { it.id == id }
+                drink?.let {
+                    DrinkDetail(
+                        isTablet = isTablet,
+                        modifier = Modifier.weight(1f),
+                        drink = it,
+                        onBack = {
+                            if (selectedDrinkHistory.size > 1) {
+                                selectedDrinkHistory = selectedDrinkHistory.dropLast(1) // Go back
+                            }
+                        }
+                    )
+                }
+            }
         } else {
-            Text("Drink not found!", modifier.padding(16.dp))
+            if (selectedDrinkId != null) {
+                val drink = drinks.find { it.id == selectedDrinkId }
+                drink?.let {
+                    DrinkDetail(
+                        isTablet = isTablet,
+                        modifier = modifier,
+                        drink = it,
+                        onBack = {
+                            if (selectedDrinkHistory.size > 1) {
+                                selectedDrinkHistory = selectedDrinkHistory.dropLast(1)
+                            } else {
+                                selectedDrinkHistory = listOf() // Go back to list
+                            }
+                        }
+                    )
+                }
+            }
         }
     }
 }

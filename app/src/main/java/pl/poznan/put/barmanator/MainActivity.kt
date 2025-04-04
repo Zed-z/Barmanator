@@ -110,13 +110,13 @@ fun MainScreen(drinks: List<Drink>) {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable("home") {
-                HomeScreen(Modifier.padding(paddingValues))
+                HomeScreen(Modifier)
             }
             composable("list") {
-                DrinkListScreen(drinks, Modifier.padding(paddingValues))
+                DrinkListScreen(drinks, Modifier)
             }
             composable("settings") {
-                Settings(Modifier.padding(paddingValues))
+                Settings(Modifier)
             }
         }
     }

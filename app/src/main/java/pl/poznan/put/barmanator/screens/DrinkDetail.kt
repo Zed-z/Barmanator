@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import pl.poznan.put.barmanator.data.Drink
 
 @Composable
-fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit) {
+fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit, isTablet: Boolean) {
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -30,8 +30,10 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit)
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Button(onClick = onBack) {
-                Text("Back")
+            if (!isTablet) {
+                Button(onClick = onBack) {
+                    Text("Back")
+                }
             }
             Text(text = drink.name, style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold
