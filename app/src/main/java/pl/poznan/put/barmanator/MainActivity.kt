@@ -57,12 +57,6 @@ class MainActivity : ComponentActivity() {
 
         database = Database(this)
 
-        runBlocking {
-            launch{
-                database.queryCocktailAPI()
-            }
-        }
-
         //enableEdgeToEdge()
         setContent {
             BarmanatorTheme {

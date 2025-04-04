@@ -198,12 +198,9 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
         """.trimIndent()
         db.execSQL(query)
 
-
-        //val insertQuerry = """
-        //    INSERT INTO $TABLE_NAME(STRDRINK, STRCATEGORY, STRALCOHOLIC, STRGLASS, STRINSTRUCTIONS, STRDRINKTHUMB, STRINGREDIENT1, STRINGREDIENT2, STRINGREDIENT3, STRINGREDIENT4, STRINGREDIENT5, STRINGREDIENT6, STRINGREDIENT7, STRINGREDIENT8, STRINGREDIENT9, STRINGREDIENT10, STRINGREDIENT11, STRINGREDIENT12, STRINGREDIENT13, STRINGREDIENT14, STRINGREDIENT15, STRMEASURE1, STRMEASURE2, STRMEASURE3, STRMEASURE4, STRMEASURE5, STRMEASURE6, STRMEASURE7, STRMEASURE8, STRMEASURE9, STRMEASURE10, STRMEASURE11, STRMEASURE12, STRMEASURE13, STRMEASURE14, STRMEASURE15, STRCREATIVECOMMONSCONFIRMED)""".trimIndent()
-
-        
-
+        runBlocking {
+            queryCocktailAPI(db)
+        }
         
 //        db.insert(TABLE_NAME, null,   ContentValues().apply { put(COLUMN_NAME,"Zombie"); put(COLUMN_TAGLINE," Tropikalny potwór"); put(COLUMN_DESCRIPTION," Zombie to jeden z najbardziej intensywnych koktajli, który łączy kilka rodzajów rumu z owocowymi sokami i likierami. Jest mocny, pełen smaku i bardzo orzeźwiający."); put(COLUMN_PREPARATION," Przygotowanie: Wymieszaj rum, sok ananasowy, sok z limonki, grenadynę, maraschino i angosturę w shakerze z lodem, przelej do szklanki."); put(COLUMN_INGREDIENTS," Składniki: 30 ml białego rumu, 30 ml ciemnego rumu, 15 ml rumu overproof, 50 ml soku ananasowego, 25 ml soku z limonki, 10 ml grenadyny, 10 ml likieru maraschino, 2-3 krople angostury, kostki lodu")})
 //        db.insert(TABLE_NAME, null,   ContentValues().apply { put(COLUMN_NAME,"White Russian"); put(COLUMN_TAGLINE," Pyszna klasyka"); put(COLUMN_DESCRIPTION," White Russian to koktajl, który łączy wódkę, likier kawowy i śmietankę, tworząc gładki, deserowy napój o bogatym smaku. Jest to idealny drink na wieczór."); put(COLUMN_PREPARATION," Przygotowanie: Wlej wódkę i likier kawowy do szklanki z lodem, dopełnij śmietanką."); put(COLUMN_INGREDIENTS," Składniki: 50 ml wódki, 30 ml likieru kawowego, 30 ml śmietanki, kostki lodu")})
@@ -281,7 +278,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
 
     private val jsonSettings = Json { ignoreUnknownKeys = true; prettyPrint = true; isLenient = true }
 
-    suspend fun queryCocktailAPI() {
+    suspend fun queryCocktailAPI(database: SQLiteDatabase) {
         // Create a Ktor client
         val client = HttpClient(CIO) {
             install(ContentNegotiation) {
@@ -347,7 +344,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                             put("strCreativeCommonsConfirmed", cocktail.strCreativeCommonsConfirmed)
                         }
 
-                        writableDatabase.insert(TABLE_NAME,null,values)
+                        database.insert(TABLE_NAME,null,values)
                     }
                 } else {
                     println("Request failed with status: ${response.status}")
