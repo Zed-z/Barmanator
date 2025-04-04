@@ -35,9 +35,6 @@ import io.ktor.client.statement.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import kotlinx.coroutines.*
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import kotlinx.serialization.Serializable
 import java.sql.PreparedStatement
 
@@ -49,10 +46,9 @@ data class CocktailResponse(
 )
 
 @SuppressLint("UnsafeOptInUsageError")
-@Entity(tableName = "cocktails")
 @Serializable
 data class Cocktail (
-        @PrimaryKey val idDrink: Long,
+        val idDrink: Long,
         val strDrink: String?,
         val strCategory: String?,
         val strAlcoholic: String?,
