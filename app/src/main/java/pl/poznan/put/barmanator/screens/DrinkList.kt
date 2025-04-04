@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import pl.poznan.put.barmanator.data.Drink
 import android.content.res.Configuration
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalConfiguration
 
 @Composable
@@ -71,8 +72,15 @@ fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier) {
     val configuration  = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
 
-    var selectedDrinkHistory by rememberSaveable { mutableStateOf(listOf(drinks.firstOrNull()?.id)) }
+    var selectedDrinkHistory by rememberSaveable { mutableStateOf(emptyList<Long>()) }
     val selectedDrinkId = selectedDrinkHistory.lastOrNull()
+
+    // Reacts to orientation change and sets a default
+    LaunchedEffect(isTablet) {
+        if (isTablet && selectedDrinkHistory.isEmpty() && drinks.isNotEmpty()) {
+            selectedDrinkHistory = listOf(drinks.first().id)
+        }
+    }
 
     Row(modifier.fillMaxSize()) {
 
@@ -108,11 +116,7 @@ fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier) {
                         modifier = modifier,
                         drink = it,
                         onBack = {
-                            if (selectedDrinkHistory.size > 1) {
-                                selectedDrinkHistory = selectedDrinkHistory.dropLast(1)
-                            } else {
-                                selectedDrinkHistory = listOf() // Go back to list
-                            }
+                            selectedDrinkHistory = listOf() // Go back to list
                         }
                     )
                 }
