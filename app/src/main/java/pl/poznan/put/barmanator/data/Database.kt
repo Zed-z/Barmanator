@@ -255,7 +255,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
 
     fun getDrinks(): List<Drink> {
         val data = mutableListOf<Drink>()
-        val cursor: Cursor = readableDatabase.query(TABLE_NAME, null, null, null, null, null, "$IDDRINK ASC")
+        val cursor: Cursor = readableDatabase.query(TABLE_NAME, null, null, null, null, null, "$STRDRINK ASC")
         with(cursor) {
             while (moveToNext()) {
                 val id = getLong(getColumnIndexOrThrow(IDDRINK))
