@@ -16,13 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import pl.poznan.put.barmanator.data.Drink
+import pl.poznan.put.barmanator.utils.Timer
 
 @Composable
 fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit, isTablet: Boolean) {
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
+        floatingActionButton = {
+            Timer()
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
