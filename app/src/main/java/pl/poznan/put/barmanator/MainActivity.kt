@@ -23,6 +23,7 @@ import pl.poznan.put.barmanator.ui.theme.BarmanatorTheme
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.FloatingActionButton
@@ -34,6 +35,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -84,7 +86,7 @@ fun MainScreenPreview() {
 fun MainScreen(drinks: List<Drink>) {
     val navController = rememberNavController()
 
-    val tabs = listOf("home", "list", "settings")
+    val tabs = listOf("Home", "List", "Settings")
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val selectedTabIndex = tabs.indexOf(currentRoute).coerceAtLeast(0)
 
@@ -98,7 +100,14 @@ fun MainScreen(drinks: List<Drink>) {
                     Tab(
                         selected = selectedTabIndex == index,
                         onClick = { navController.navigate(route) },
-                        text = { Text(route) }
+                        text = { Text(route) },
+                        icon = {
+                            Icon(
+                                modifier = Modifier.size(48.dp),
+                                painter = painterResource(id = R.drawable.media_pause),
+                                contentDescription = route
+                            )
+                        }
                     )
                 }
             }
@@ -109,13 +118,13 @@ fun MainScreen(drinks: List<Drink>) {
             startDestination = "home",
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable("home") {
+            composable("Home") {
                 HomeScreen(Modifier)
             }
-            composable("list") {
+            composable("List") {
                 DrinkListScreen(drinks, Modifier)
             }
-            composable("settings") {
+            composable("Settings") {
                 Settings(Modifier)
             }
         }
