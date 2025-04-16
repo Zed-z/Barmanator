@@ -23,8 +23,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import pl.poznan.put.barmanator.data.Drink
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun DrinkListItem(drink: Drink, onClick: () -> Unit) {
@@ -69,11 +71,25 @@ fun DrinkList(drinks: List<Drink>, modifier: Modifier, onDrinkClick: (Long) -> U
 
 @Composable
 fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier) {
+
     val configuration  = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
 
     var selectedDrinkHistory by rememberSaveable { mutableStateOf(emptyList<Long>()) }
     val selectedDrinkId = selectedDrinkHistory.lastOrNull()
+
+    // Intercept back press
+    BackHandler(enabled = (
+            if (isTablet) (selectedDrinkHistory.size > 1)
+            else (!selectedDrinkHistory.isEmpty())
+            )
+    ) {
+        if (isTablet) {
+            selectedDrinkHistory = selectedDrinkHistory.dropLast(1) // Go back an item
+        } else {
+            selectedDrinkHistory = listOf() // Go back completely
+        }
+    }
 
     // Reacts to orientation change and sets a default
     LaunchedEffect(isTablet) {
@@ -101,7 +117,7 @@ fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier) {
                         drink = it,
                         onBack = {
                             if (selectedDrinkHistory.size > 1) {
-                                selectedDrinkHistory = selectedDrinkHistory.dropLast(1) // Go back
+                                selectedDrinkHistory = selectedDrinkHistory.dropLast(1)
                             }
                         }
                     )
@@ -116,7 +132,7 @@ fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier) {
                         modifier = modifier,
                         drink = it,
                         onBack = {
-                            selectedDrinkHistory = listOf() // Go back to list
+                            selectedDrinkHistory = listOf()
                         }
                     )
                 }
