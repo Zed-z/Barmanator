@@ -1,5 +1,7 @@
 package pl.poznan.put.barmanator.screens
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,8 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import pl.poznan.put.barmanator.data.Drink
 import pl.poznan.put.barmanator.utils.Timer
@@ -28,9 +32,12 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit,
             .padding(16.dp),
         floatingActionButton = {
             Timer(
-                viewModel = viewModel<TimerViewModel>(key = "timer-${drink.id}") {
+                viewModel = viewModel<TimerViewModel>(
+                    viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner,
+                    key = "timer-${drink.id}",
+                    initializer = {
                     TimerViewModel(1 * 60)
-                }
+                })
             )
         }
     ) { paddingValues ->
