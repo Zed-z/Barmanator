@@ -115,5 +115,6 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
 
-
+    implementation(libs.androidx.lifecycle.viewmodel.compose.v261) // or newer
+    implementation(libs.runtime.livedata)      // for `collectAsState()` and such
 }

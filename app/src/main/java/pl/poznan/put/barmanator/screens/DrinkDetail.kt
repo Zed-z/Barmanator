@@ -15,8 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import pl.poznan.put.barmanator.data.Drink
 import pl.poznan.put.barmanator.utils.Timer
+import pl.poznan.put.barmanator.utils.TimerViewModel
 
 @Composable
 fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit, isTablet: Boolean) {
@@ -25,7 +27,11 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit,
             .fillMaxSize()
             .padding(16.dp),
         floatingActionButton = {
-            Timer()
+            Timer(
+                viewModel = viewModel<TimerViewModel>(key = "timer-${drink.id}") {
+                    TimerViewModel(1 * 60)
+                }
+            )
         }
     ) { paddingValues ->
         Column(

@@ -10,6 +10,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -31,18 +33,18 @@ fun timeString(seconds: Int): String {
 @Composable
 fun Timer(
     modifier: Modifier = Modifier,
-    startValue: Int = 10 * 60
+    viewModel: TimerViewModel
 ) {
-    var time: Int by remember { mutableIntStateOf(startValue) }
-    var running: Boolean by remember { mutableStateOf(false) }
+    var time: State<Int> = viewModel.time.collectAsState()
+    var running: State<Boolean> = viewModel.running.collectAsState()
 
-    LaunchedEffect(running) {
-        if (running) {
-            while (time > 0) {
+    LaunchedEffect(running.value) {
+        if (running.value) {
+            while (time.value > 0) {
                 delay(1.seconds)
-                time--
+                viewModel.setTime(time.value - 1)
             }
-            running = false
+            viewModel.setRunning(false)
         }
     }
 
@@ -52,24 +54,24 @@ fun Timer(
     ) {
         Button(
             onClick = {
-                if (!running) {
-                    running = true
+                if (!running.value) {
+                    viewModel.setRunning(true)
                 } else {
-                    running = false
+                    viewModel.setRunning(false)
                 }
             }
         ) {
             Icon(
                 modifier = Modifier.size(24.dp),
-                painter = if (running)
+                painter = if (running.value)
                     painterResource(id = R.drawable.media_pause)
                     else painterResource(id = R.drawable.media_play),
-                contentDescription = if (running)
+                contentDescription = if (running.value)
                     "Pause"
                     else "Play"
             )
             Text(
-                text = timeString(time),
+                text = timeString(time.value),
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -78,8 +80,8 @@ fun Timer(
 
         Button(
             onClick = {
-                time = startValue
-                running = false
+                viewModel.resetTime()
+                viewModel.setRunning(false)
             }
         ) {
             Icon(
