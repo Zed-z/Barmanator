@@ -1,14 +1,21 @@
 package pl.poznan.put.barmanator.utils
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -18,14 +25,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.delay
 import pl.poznan.put.barmanator.R
-import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.max
 import kotlin.time.Duration.Companion.seconds
@@ -37,41 +46,67 @@ fun timeString(seconds: Int): String {
 @Composable
 fun TimerTimePicker(
     modifier: Modifier = Modifier,
-    viewModel: TimerViewModel,
-    timePickerVisible: MutableState<Boolean>
+    time: Int,
+    hide: () -> Unit,
+    callback: (Int) -> Unit
 ) {
 
-    var timePickerTime = remember { mutableStateOf(60) }
+    var timePickerTime by rememberSaveable { mutableIntStateOf(time) }
 
     AlertDialog(
-        onDismissRequest = { },
+        onDismissRequest = {
+
+        },
         dismissButton = {
-            Button(onClick = {  }) {
+            Button(onClick = {
+                hide()
+            }) {
                 Text("Dismiss")
             }
         },
         confirmButton = {
-            Button(onClick = { timePickerVisible.value = false }) {
+            Button(onClick = {
+                hide()
+                callback(timePickerTime)
+            }) {
                 Text("OK")
             }
         },
-        text = {
-            Row() {
-                Button(
-                    onClick = { timePickerTime.value = max(15, timePickerTime.value - 15) }
-                ) {
-                    Text(text = "<")
-                }
-                Text(
-                    text = timeString(timePickerTime.value),
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.ExtraBold
-                    )
+        title = {
+            Text(
+                text = "Choose timer length:",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Normal
                 )
-                Button(
-                    onClick = { timePickerTime.value = min(10 * 60, timePickerTime.value + 15) }
+            )
+        },
+        text = {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+
                 ) {
-                    Text(text = ">")
+                    Button(
+                        onClick = { timePickerTime = max(15, timePickerTime - 15) }
+                    ) {
+                        Text(text = "<")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = timeString(timePickerTime),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = { timePickerTime = min(10 * 60, timePickerTime + 15) }
+                    ) {
+                        Text(text = ">")
+                    }
                 }
             }
         }
@@ -86,7 +121,7 @@ fun Timer(
     var time: State<Int> = viewModel.time.collectAsState()
     var running: State<Boolean> = viewModel.running.collectAsState()
 
-    var timePickerVisible = remember { mutableStateOf(false) }
+    var timePickerVisible by rememberSaveable() { mutableStateOf(false) }
 
     LaunchedEffect(running.value) {
         if (running.value) {
@@ -101,33 +136,36 @@ fun Timer(
         }
     }
 
-    if (timePickerVisible.value) {
+    println("AAAAAAAAAAAAAAAAAA" + timePickerVisible)
+    if (timePickerVisible) {
         TimerTimePicker(
-            viewModel = viewModel,
-            timePickerVisible = timePickerVisible
+            time = time.value,
+            hide = {
+                timePickerVisible = false
+            },
+            callback = fun (time: Int) {
+                viewModel.setTime(time, true)
+            }
         )
     }
+
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Button(
+        FloatingActionButton(
             onClick = {
-                timePickerVisible.value = true
+                timePickerVisible = true
             }
         ) {
             Icon(
                 modifier = Modifier.size(24.dp),
-                painter = if (running.value)
-                    painterResource(id = R.drawable.media_pause)
-                else painterResource(id = R.drawable.media_play),
-                contentDescription = if (running.value)
-                    "Pause"
-                else "Play"
+                painter = painterResource(id = R.drawable.hourglass),
+                contentDescription = "Set Time"
             )
         }
 
-        Button(
+        ExtendedFloatingActionButton(
             onClick = {
                 if (!running.value) {
                     if (time.value == 0) {
@@ -137,26 +175,29 @@ fun Timer(
                 } else {
                     viewModel.setRunning(false)
                 }
-            }
-        ) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = if (running.value)
-                    painterResource(id = R.drawable.media_pause)
+            },
+            icon = {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = if (running.value)
+                        painterResource(id = R.drawable.media_pause)
                     else painterResource(id = R.drawable.media_play),
-                contentDescription = if (running.value)
-                    "Pause"
+                    contentDescription = if (running.value)
+                        "Pause"
                     else "Play"
-            )
-            Text(
-                text = timeString(time.value),
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.ExtraBold
                 )
-            )
-        }
+            },
+            text = {
+                Text(
+                    text = timeString(time.value),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                )
+            }
+        )
 
-        Button(
+        FloatingActionButton(
             onClick = {
                 viewModel.resetTime()
                 viewModel.setRunning(false)
@@ -166,12 +207,6 @@ fun Timer(
                 modifier = Modifier.size(24.dp),
                 painter = painterResource(id = R.drawable.media_stop),
                 contentDescription = "Stop"
-            )
-            Text(
-                text = "",
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.ExtraBold
-                )
             )
         }
     }

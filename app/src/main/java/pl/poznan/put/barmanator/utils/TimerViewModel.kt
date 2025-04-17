@@ -5,14 +5,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class TimerViewModel(initialTime: Int) : ViewModel() {
-
-    val initialTime = initialTime
+    var initialTime = initialTime
 
     private val _time: MutableStateFlow<Int> = MutableStateFlow(initialTime)
     val time: StateFlow<Int> = _time
 
-    fun setTime(time: Int) {
-        _time.value = time;
+    fun setTime(time: Int, overrideInitialTime: Boolean = false) {
+        _time.value = time
+        if (overrideInitialTime) {
+            initialTime = time
+        }
     }
 
     fun resetTime() {
