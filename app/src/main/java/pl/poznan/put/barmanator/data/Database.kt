@@ -97,11 +97,9 @@ data class Drink(
     val category: String,
     val instructions: String,
 
-    val ingreadients: List<String> = ArrayList<String>(),
-    val measures: List<String> =ArrayList<String>(),
-
-
-    )
+    val ingredients: List<String> = ArrayList<String>(),
+    val measures: List<String> =ArrayList<String>()
+)
 
 class CocktailDatabase
 
