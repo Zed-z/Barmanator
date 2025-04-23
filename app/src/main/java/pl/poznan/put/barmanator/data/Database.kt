@@ -253,8 +253,9 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    fun getDrinks(): List<Drink> {
+       fun getDrinks(): List<Drink> {
         val data = mutableListOf<Drink>()
+
         val cursor: Cursor = readableDatabase.query(TABLE_NAME, null, null, null, null, null, "$STRDRINK ASC")
         with(cursor) {
             while (moveToNext()) {
@@ -263,7 +264,27 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                 val category = getString(getColumnIndexOrThrow(STRCATEGORY))
                 val instructions = getString(getColumnIndexOrThrow(STRINSTRUCTIONS))
 
-                data.add(Drink(id, name, category, instructions))
+                val ingredients = mutableListOf<String>()
+                val measures = mutableListOf<String>()
+
+                for (i in 1..15) {
+                    val ingredientCol = "strIngredient$i"
+                    val measureCol = "strMeasure$i"
+
+                    val ingredient = getString(getColumnIndexOrThrow(ingredientCol))
+                    val measure = getString(getColumnIndexOrThrow(measureCol))
+
+
+                    if (!ingredient.isNullOrBlank()) {
+                        ingredients.add(ingredient)
+                        measures.add(measure ?: "")
+                    }
+                }
+                
+
+
+
+                data.add(Drink(id, name, category, instructions,ingredients,measures))
             }
         }
         cursor.close()
