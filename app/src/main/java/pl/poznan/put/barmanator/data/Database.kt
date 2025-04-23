@@ -3,19 +3,11 @@ package pl.poznan.put.barmanator.data
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.BitmapFactory
-import androidx.compose.foundation.Image
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -23,27 +15,12 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.client.plugins.contentnegotiation.*
-import kotlinx.serialization.*
-import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.*
-import io.ktor.util.logging.Logger
-import io.ktor.client.*
 import io.ktor.client.call.body
-import io.ktor.client.engine.cio.*
 
-import io.ktor.http.*
-import io.ktor.client.statement.*
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
-import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
-import java.sql.PreparedStatement
 
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -104,13 +81,12 @@ data class Drink(
     val category: String,
     val instructions: String,
 
-    val ingreadients: List<String> = ArrayList<String>(),
+    val ingredients: List<String> = ArrayList<String>(),
     val measures: List<String> =ArrayList<String>(),
 
-    val image : @Composable () -> Unit = {}
+    val image: ImageBitmap?
 
-
-    )
+)
 
 class CocktailDatabase
 
@@ -229,11 +205,12 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                 val category = getString(getColumnIndexOrThrow(STRCATEGORY))
                 val instructions = getString(getColumnIndexOrThrow(STRINSTRUCTIONS))
 
-                val image_bytes : ByteArray = getBlob(getColumnIndexOrThrow(IMAGE))
-                val bitmap = BitmapFactory.decodeByteArray(image_bytes,0,image_bytes.size)
-
-
-
+                val imageBytes : ByteArray = getBlob(getColumnIndexOrThrow(IMAGE))
+                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                var imageBitmap: ImageBitmap? = null
+                if (bitmap != null) {
+                    imageBitmap = bitmap.asImageBitmap()
+                }
 
                 val ingredients = mutableListOf<String>()
                 val measures = mutableListOf<String>()
@@ -252,20 +229,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                     }
                 }
 
-
-
-
-                data.add(Drink(id, name, category, instructions,ingredients,measures,
-                    {
-                        Image(
-                            bitmap = bitmap.asImageBitmap(),
-                            contentDescription  = null,
-                            modifier = Modifier.fillMaxSize()
-
-                        )
-                    })
-
-                )
+                data.add(Drink(id, name, category, instructions,ingredients,measures,imageBitmap))
             }
         }
         cursor.close()
