@@ -114,6 +114,8 @@ dependencies {
     implementation(libs.androidx.material3.window.size.class1)
 
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.foundation)
+    implementation(libs.androidx.foundation)
 
     implementation(libs.androidx.lifecycle.viewmodel.compose.v261) // or newer
     implementation(libs.runtime.livedata)      // for `collectAsState()` and such
