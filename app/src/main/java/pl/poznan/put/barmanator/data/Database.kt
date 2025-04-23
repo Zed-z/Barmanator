@@ -91,12 +91,17 @@ data class Cocktail (
 
 )
 
-data class Drink (
+data class Drink(
     val id: Long,
     val name: String,
     val category: String,
     val instructions: String,
-)
+
+    val ingreadients: List<String> = ArrayList<String>(),
+    val measures: List<String> =ArrayList<String>(),
+
+
+    )
 
 class CocktailDatabase
 
@@ -253,7 +258,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-       fun getDrinks(): List<Drink> {
+    fun getDrinks(): List<Drink> {
         val data = mutableListOf<Drink>()
 
         val cursor: Cursor = readableDatabase.query(TABLE_NAME, null, null, null, null, null, "$STRDRINK ASC")
@@ -280,7 +285,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                         measures.add(measure ?: "")
                     }
                 }
-                
+
 
 
 
