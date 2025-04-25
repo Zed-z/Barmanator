@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,12 +18,14 @@ import pl.poznan.put.barmanator.ui.theme.BarmanatorTheme
 import androidx.compose.material.Icon
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.painterResource
 import pl.poznan.put.barmanator.data.Database
 import pl.poznan.put.barmanator.data.Drink
 import pl.poznan.put.barmanator.screens.HomeScreen
 import pl.poznan.put.barmanator.screens.Settings
 import androidx.navigation.compose.*
+import kotlinx.coroutines.launch
 import pl.poznan.put.barmanator.screens.DrinkListScreen
 
 class MainActivity : ComponentActivity() {
@@ -59,28 +63,33 @@ fun MainScreenPreview() {
 
 @Composable
 fun MainScreen(drinks: List<Drink>) {
-    val navController = rememberNavController()
-
     val tabs = listOf("Home", "List", "Settings")
-    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-    val selectedTabIndex = tabs.indexOf(currentRoute).coerceAtLeast(0)
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        pageCount = { tabs.size }
+    )
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
         bottomBar = {
             ScrollableTabRow(
-                selectedTabIndex = selectedTabIndex
+                selectedTabIndex = pagerState.currentPage
             ) {
-                tabs.forEachIndexed { index, route ->
+                tabs.forEachIndexed { index, title ->
                     Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { navController.navigate(route) },
-                        text = { Text(route) },
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                        text = { Text(title) },
                         icon = {
                             Icon(
                                 modifier = Modifier.size(48.dp),
                                 painter = painterResource(id = R.drawable.media_pause),
-                                contentDescription = route
+                                contentDescription = title
                             )
                         }
                     )
@@ -88,19 +97,16 @@ fun MainScreen(drinks: List<Drink>) {
             }
         }
     ) { paddingValues ->
-        NavHost(
-            navController = navController,
-            startDestination = "home",
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            composable("Home") {
-                HomeScreen(Modifier)
-            }
-            composable("List") {
-                DrinkListScreen(drinks, Modifier)
-            }
-            composable("Settings") {
-                Settings(Modifier)
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) { page ->
+            when (tabs[page]) {
+                "Home" -> HomeScreen(Modifier)
+                "List" -> DrinkListScreen(drinks, Modifier)
+                "Settings" -> Settings(Modifier)
             }
         }
     }

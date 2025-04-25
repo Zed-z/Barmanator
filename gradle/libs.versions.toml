@@ -1,6 +1,8 @@
 [versions]
+accompanistPager = "0.34.0-alpha"
 activityComposeVersion = "1.10.0"
 agp = "8.9.0"
+googleAccompanistPager = "0.32.0"
 kotlin = "2.0.21"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -21,6 +23,9 @@ roomCommon = "2.6.1"
 runtimeLivedata = "1.7.8"
 
 [libraries]
+accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
+accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "googleAccompanistPager" }
+accompanist-pager-v0320 = { module = "com.google.accompanist:accompanist-pager", version.ref = "googleAccompanistPager" }
 androidx-activity-compose-v1100 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
 androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

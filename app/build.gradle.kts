@@ -119,4 +119,7 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.viewmodel.compose.v261) // or newer
     implementation(libs.runtime.livedata)      // for `collectAsState()` and such
+
+    implementation(libs.accompanist.pager.v0320)
+    implementation(libs.accompanist.pager.indicators)
 }
