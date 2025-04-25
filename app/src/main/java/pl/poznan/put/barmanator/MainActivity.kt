@@ -19,6 +19,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import pl.poznan.put.barmanator.data.Database
 import pl.poznan.put.barmanator.data.Drink
@@ -61,9 +62,21 @@ fun MainScreenPreview() {
     }
 }
 
+data class TabItem(
+    val title: String,
+    val iconRes: Int
+)
+
 @Composable
 fun MainScreen(drinks: List<Drink>) {
-    val tabs = listOf("Home", "List", "Settings")
+    val tabs = listOf(
+        TabItem("Home", R.drawable.home),
+        TabItem("All", R.drawable.drink),
+        TabItem("Shots", R.drawable.drink),
+        TabItem("Ordinary", R.drawable.drink),
+        TabItem("Cocktails", R.drawable.drink),
+        TabItem("Settings", R.drawable.home)
+    )
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { tabs.size }
@@ -76,7 +89,7 @@ fun MainScreen(drinks: List<Drink>) {
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage
             ) {
-                tabs.forEachIndexed { index, title ->
+                tabs.forEachIndexed { index, tab ->
                     Tab(
                         selected = pagerState.currentPage == index,
                         onClick = {
@@ -84,12 +97,13 @@ fun MainScreen(drinks: List<Drink>) {
                                 pagerState.animateScrollToPage(index)
                             }
                         },
-                        text = { Text(title) },
+                        text = { Text(tab.title) },
                         icon = {
                             Icon(
                                 modifier = Modifier.size(48.dp),
-                                painter = painterResource(id = R.drawable.media_pause),
-                                contentDescription = title
+                                painter = painterResource(id = tab.iconRes),
+                                contentDescription = tab.title,
+                                tint = Color.Unspecified
                             )
                         }
                     )
@@ -103,9 +117,12 @@ fun MainScreen(drinks: List<Drink>) {
                 .fillMaxSize()
                 .padding(paddingValues)
         ) { page ->
-            when (tabs[page]) {
+            when (tabs[page].title) {
                 "Home" -> HomeScreen(Modifier)
-                "List" -> DrinkListScreen(drinks, Modifier)
+                "All" -> DrinkListScreen(drinks, Modifier)
+                "Shots" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Shot") })
+                "Ordinary" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Ordinary") })
+                "Cocktails" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Cocktail") })
                 "Settings" -> Settings(Modifier)
             }
         }

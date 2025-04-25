@@ -80,7 +80,7 @@ fun DrinkListItem(drink: Drink, onClick: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun MainScreenPreview() {
+fun DrinkListScreenPreview() {
     val sampleDrinks = listOf(
         Drink(1, "Zombie", "Strong", "Shake well with ice", emptyList(), emptyList(), null),
         Drink(2, "Mojito", "Classic", "Muddle mint, add rum and soda", emptyList(), emptyList(), null),
@@ -88,7 +88,7 @@ fun MainScreenPreview() {
     )
 
     BarmanatorTheme {
-        DrinkList(drinks = sampleDrinks, onDrinkClick = {})
+        DrinkListScreen(drinks = sampleDrinks)
     }
 }
 
@@ -96,14 +96,16 @@ fun MainScreenPreview() {
 fun DrinkList(
     drinks: List<Drink> = ArrayList<Drink>(),
     modifier: Modifier = Modifier,
-    onDrinkClick: (Long) -> Unit
+    onDrinkClick: (Long) -> Unit,
+    filter: (Drink) -> Boolean
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier.fillMaxSize(),
         content = {
-            items(drinks.size) { drinkId ->
-                val drink = drinks[drinkId]
+            val drinksFiltered = drinks.filter { filter(it) }
+            items(drinksFiltered.size) { drinkId ->
+                val drink = drinksFiltered[drinkId]
                 DrinkListItem(drink = drink, onClick = { onDrinkClick(drink.id) })
             }
         }
@@ -111,7 +113,7 @@ fun DrinkList(
 }
 
 @Composable
-fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier) {
+fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier, filter: (Drink) -> Boolean = { true }) {
 
     val configuration  = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
@@ -147,7 +149,9 @@ fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier) {
             onDrinkClick = { drinkId ->
                 selectedDrinkHistory = selectedDrinkHistory + drinkId
             },
-            modifier = modifier.weight(1f))
+            modifier = modifier.weight(1f),
+            filter = filter
+        )
 
         if (isTablet) {
             selectedDrinkId?.let { id ->

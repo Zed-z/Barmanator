@@ -8,7 +8,7 @@
    version="1.1"
    id="svg1"
    inkscape:version="1.4 (86a8ad7, 2024-10-11)"
-   sodipodi:docname="hourglass.svg"
+   sodipodi:docname="drink.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -25,8 +25,8 @@
      inkscape:document-units="mm"
      showgrid="true"
      inkscape:zoom="1.4378367"
-     inkscape:cx="108.49632"
-     inkscape:cy="263.24268"
+     inkscape:cx="157.18057"
+     inkscape:cy="241.68252"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="-8"
@@ -50,6 +50,23 @@
   </sodipodi:namedview>
   <defs
      id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect4"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
     <inkscape:path-effect
        effect="fillet_chamfer"
        id="path-effect1"
@@ -224,40 +241,15 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="fill:#ffffff;stroke-width:0.570197;stroke-linecap:square;paint-order:markers fill stroke;fill-opacity:1"
-       id="rect1"
-       width="40"
-       height="6.25"
-       x="30"
-       y="20" />
     <path
-       id="path1-5"
-       style="fill:#ffffff;stroke-width:0.79501;stroke-linecap:square;paint-order:markers fill stroke;fill-opacity:1"
-       d="M -32.000114 -25.000024 A 18 24 0 0 0 -50.000049 -49.00011 A 18 24 0 0 0 -67.999984 -25.000024 L -32.000114 -25.000024 z M -35.99987 -26.999902 L -64.000228 -26.999902 A 14 19 0 0 1 -50.000049 -45.999776 A 14 19 0 0 1 -35.99987 -26.999902 z "
-       transform="scale(-1)" />
-    <rect
-       style="fill:#ffffff;stroke-width:0.765;stroke-linecap:square;paint-order:markers fill stroke;fill-opacity:1"
        id="rect2"
-       width="8"
-       height="7"
-       x="46"
-       y="47" />
-    <rect
-       style="fill:#ffffff;stroke-width:0.570197;stroke-linecap:square;paint-order:markers fill stroke;fill-opacity:1"
+       style="fill:#f9f9f9;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       d="M 35,30 50,49 65,30 h 5.000001 L 52,53 v 22.000001 l 8,5 H 40 l 8,-5 V 53 L 30,30 Z"
+       sodipodi:nodetypes="cccccccccccc" />
+    <path
        id="rect3"
-       width="40"
-       height="6.25"
-       x="-70"
-       y="-80"
-       transform="scale(-1)" />
-    <path
-       id="path3"
-       style="fill:#ffffff;stroke-width:0.79501;stroke-linecap:square;paint-order:markers fill stroke;fill-opacity:1"
-       d="M 50.000179,50.999794 A 18,24 0 0 0 32.000244,74.999879 h 35.99987 A 18,24 0 0 0 50.000179,50.999794 Z m 0,2.999817 a 14,19 0 0 1 14.000179,19.00039 H 36 a 14,19 0 0 1 14.000179,-19.00039 z" />
-    <path
-       id="path4"
-       style="fill:#ffffff;fill-opacity:1;stroke-width:0.517438;stroke-linecap:square;paint-order:markers fill stroke"
-       d="M 43.601473 60.92548 C 42.749135 60.937654 41.714967 61.148137 40.670903 61.449479 A 12 15.250004 0 0 0 37.999748 70.999801 L 61.999833 70.999801 A 12 15.250004 0 0 0 59.450635 61.607092 C 59.168943 61.563328 58.878397 61.532223 58.577303 61.519759 C 57.116211 61.459279 54.43438 62.886055 52.999866 62.999772 C 48.669441 63.343052 47.961953 61.748849 44.480489 60.999894 C 44.219399 60.943727 43.923507 60.92088 43.601473 60.92548 z " />
+       style="fill:#f9f9f9;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       d="M 61.688953 -7.1391576 L 61.689203 7.1986055 C 62.079743 7.0862294 62.483984 6.961584 62.917511 6.8094928 C 63.516012 6.5995253 64.103024 6.2510977 64.689173 5.8401216 L 64.689017 -7.1395469 L 61.688953 -7.1391576 z M 64.689173 5.8401216 L 64.689043 10.860784 L 61.689225 10.860486 L 61.689203 7.1986055 C 58.106094 8.2296305 56.16981 7.7811116 53.020074 9.2668038 C 51.867474 9.810471 50.136196 11.268211 48.757251 12.51225 L 64.997051 20.593862 L 69.121758 2.782572 C 69.021745 2.8285308 68.922348 2.869941 68.822053 2.918797 C 67.365766 3.6297514 66.029883 4.9000875 64.689173 5.8401216 z "
+       transform="rotate(25.252683)" />
   </g>
 </svg>
