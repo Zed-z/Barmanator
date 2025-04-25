@@ -19,6 +19,7 @@ import kotlinx.serialization.json.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
 import io.ktor.client.call.body
+import io.ktor.client.plugins.HttpTimeout
 
 import kotlinx.serialization.Serializable
 
@@ -32,48 +33,48 @@ data class CocktailResponse(
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class Cocktail (
-        val idDrink: Long,
-        val strDrink: String?,
-        val strCategory: String?,
-        val strAlcoholic: String?,
-        val strGlass: String?,
-        val strInstructions: String?,
-        val strDrinkThumb: String?,
-        val strIngredient1: String?,
-        val strIngredient2: String?,
-        val strIngredient3: String?,
-        val strIngredient4: String?,
-        val strIngredient5: String?,
-        val strIngredient6: String?,
-        val strIngredient7: String?,
-        val strIngredient8: String?,
-        val strIngredient9: String?,
-        val strIngredient10: String?,
-        val strIngredient11: String?,
-        val strIngredient12: String?,
-        val strIngredient13: String?,
-        val strIngredient14: String?,
-        val strIngredient15:String?,
-        val strMeasure1: String?,
-        val strMeasure2: String?,
-        val strMeasure3: String?,
-        val strMeasure4: String?,
-        val strMeasure5: String?,
-        val strMeasure6: String?,
-        val strMeasure7: String?,
-        val strMeasure8: String?,
-        val strMeasure9: String?,
-        val strMeasure10: String?,
-        val strMeasure11: String?,
-        val strMeasure12: String?,
-        val strMeasure13: String?,
-        val strMeasure14: String?,
-        val strMeasure15: String?,
+    val idDrink: Long,
+    val strDrink: String?,
+    val strCategory: String?,
+    val strAlcoholic: String?,
+    val strGlass: String?,
+    val strInstructions: String?,
+    val strDrinkThumb: String?,
+    val strIngredient1: String?,
+    val strIngredient2: String?,
+    val strIngredient3: String?,
+    val strIngredient4: String?,
+    val strIngredient5: String?,
+    val strIngredient6: String?,
+    val strIngredient7: String?,
+    val strIngredient8: String?,
+    val strIngredient9: String?,
+    val strIngredient10: String?,
+    val strIngredient11: String?,
+    val strIngredient12: String?,
+    val strIngredient13: String?,
+    val strIngredient14: String?,
+    val strIngredient15:String?,
+    val strMeasure1: String?,
+    val strMeasure2: String?,
+    val strMeasure3: String?,
+    val strMeasure4: String?,
+    val strMeasure5: String?,
+    val strMeasure6: String?,
+    val strMeasure7: String?,
+    val strMeasure8: String?,
+    val strMeasure9: String?,
+    val strMeasure10: String?,
+    val strMeasure11: String?,
+    val strMeasure12: String?,
+    val strMeasure13: String?,
+    val strMeasure14: String?,
+    val strMeasure15: String?,
 
 
-        val strCreativeCommonsConfirmed: String?,
+    val strCreativeCommonsConfirmed: String?,
 
-)
+    )
 
 data class Drink(
     val id: Long,
@@ -189,7 +190,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
         runBlocking {
             queryCocktailAPI(db)
         }
-        
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
@@ -236,12 +237,12 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
         return data
     }
 
-    fun drinkExists(idDrink: Long): Boolean {
+    fun drinkExists(idDrink: Long, database : SQLiteDatabase= readableDatabase): Boolean {
         val data = mutableListOf<Cocktail>()
 
         val selection = "$IDDRINK = ?"
         val selectionArgs = arrayOf(idDrink.toString())
-        val cursor: Cursor = readableDatabase.query(TABLE_NAME, arrayOf(IDDRINK), selection, selectionArgs, null, null, null)
+        val cursor: Cursor = database.query(TABLE_NAME, arrayOf(IDDRINK), selection, selectionArgs, null, null, null)
 
         val exists = cursor.moveToFirst()
         cursor.close()
@@ -256,13 +257,26 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
             install(ContentNegotiation) {
                 json(jsonSettings)
             }
+            engine {
+                requestTimeout = 15_000 // 15 sekund na całe żądanie
+                endpoint {
+                    connectTimeout = 10_000 // 10 sek. na nawiązanie połączenia
+                    connectAttempts = 3     // próby połączenia
+                }
+            }
+
+            install(HttpTimeout) {
+                requestTimeoutMillis = 15_000
+                connectTimeoutMillis = 10_000
+                socketTimeoutMillis = 15_000
+            }
         }
 
-        for (letter in 'a'..'z') {
+        for ( i in 0..30) {
             try {
                 println("BBB")
                 val response: HttpResponse =
-                    client.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?f=$letter") {
+                    client.get("https://www.thecocktaildb.com/api/json/v1/1/random.php") {
                         contentType(ContentType.Application.Json)
                     }
                 // Parse response
@@ -273,60 +287,79 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                     println("Parsed Result: ${result.drinks}")
 
                     for (cocktail in result.drinks) {
-
-                        var image_response: HttpResponse = client.get(cocktail.strDrinkThumb.toString())
-                        var img: ByteArray? = image_response.body()
-                        if (response.status == HttpStatusCode.OK) {
-
-                            val values = ContentValues().apply {
-                                put("idDrink", cocktail.idDrink)
-                                put("strDrink", cocktail.strDrink)
-                                put("strCategory", cocktail.strCategory)
-                                put("strAlcoholic", cocktail.strAlcoholic)
-                                put("strGlass", cocktail.strGlass)
-                                put("strInstructions", cocktail.strInstructions)
-                                put("strDrinkThumb", cocktail.strDrinkThumb)
-                                put("strIngredient1", cocktail.strIngredient1)
-                                put("strIngredient2", cocktail.strIngredient2)
-                                put("strIngredient3", cocktail.strIngredient3)
-                                put("strIngredient4", cocktail.strIngredient4)
-                                put("strIngredient5", cocktail.strIngredient5)
-                                put("strIngredient6", cocktail.strIngredient6)
-                                put("strIngredient7", cocktail.strIngredient7)
-                                put("strIngredient8", cocktail.strIngredient8)
-                                put("strIngredient9", cocktail.strIngredient9)
-                                put("strIngredient10", cocktail.strIngredient10)
-                                put("strIngredient11", cocktail.strIngredient11)
-                                put("strIngredient12", cocktail.strIngredient12)
-                                put("strIngredient13", cocktail.strIngredient13)
-                                put("strIngredient14", cocktail.strIngredient14)
-                                put("strIngredient15", cocktail.strIngredient15)
-                                put("strMeasure1", cocktail.strMeasure1)
-                                put("strMeasure2", cocktail.strMeasure2)
-                                put("strMeasure3", cocktail.strMeasure3)
-                                put("strMeasure4", cocktail.strMeasure4)
-                                put("strMeasure5", cocktail.strMeasure5)
-                                put("strMeasure6", cocktail.strMeasure6)
-                                put("strMeasure7", cocktail.strMeasure7)
-                                put("strMeasure8", cocktail.strMeasure8)
-                                put("strMeasure9", cocktail.strMeasure9)
-                                put("strMeasure10", cocktail.strMeasure10)
-                                put("strMeasure11", cocktail.strMeasure11)
-                                put("strMeasure12", cocktail.strMeasure12)
-                                put("strMeasure13", cocktail.strMeasure13)
-                                put("strMeasure14", cocktail.strMeasure14)
-                                put("strMeasure15", cocktail.strMeasure15)
-                                put(
-                                    "strCreativeCommonsConfirmed",
-                                    cocktail.strCreativeCommonsConfirmed
+                        try {
+                            var image_response: HttpResponse =
+                                client.get(cocktail.strDrinkThumb.toString())
+                            headers {
+                                append(
+                                    HttpHeaders.Accept,
+                                    "image/webp,image/apng,image/*,*/*;q=0.8"
                                 )
-                                put("Image", img)
-
+                                append(
+                                    HttpHeaders.UserAgent,
+                                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                                )
                             }
+                            var img: ByteArray? = image_response.body()
+                            if (response.status == HttpStatusCode.OK) {
 
-                            if (!drinkExists(cocktail.idDrink)) {
-                                database.insert(TABLE_NAME, null, values);
+                                val values = ContentValues().apply {
+                                    put("idDrink", cocktail.idDrink)
+                                    put("strDrink", cocktail.strDrink)
+                                    put("strCategory", cocktail.strCategory)
+                                    put("strAlcoholic", cocktail.strAlcoholic)
+                                    put("strGlass", cocktail.strGlass)
+                                    put("strInstructions", cocktail.strInstructions)
+                                    put("strDrinkThumb", cocktail.strDrinkThumb)
+                                    put("strIngredient1", cocktail.strIngredient1)
+                                    put("strIngredient2", cocktail.strIngredient2)
+                                    put("strIngredient3", cocktail.strIngredient3)
+                                    put("strIngredient4", cocktail.strIngredient4)
+                                    put("strIngredient5", cocktail.strIngredient5)
+                                    put("strIngredient6", cocktail.strIngredient6)
+                                    put("strIngredient7", cocktail.strIngredient7)
+                                    put("strIngredient8", cocktail.strIngredient8)
+                                    put("strIngredient9", cocktail.strIngredient9)
+                                    put("strIngredient10", cocktail.strIngredient10)
+                                    put("strIngredient11", cocktail.strIngredient11)
+                                    put("strIngredient12", cocktail.strIngredient12)
+                                    put("strIngredient13", cocktail.strIngredient13)
+                                    put("strIngredient14", cocktail.strIngredient14)
+                                    put("strIngredient15", cocktail.strIngredient15)
+                                    put("strMeasure1", cocktail.strMeasure1)
+                                    put("strMeasure2", cocktail.strMeasure2)
+                                    put("strMeasure3", cocktail.strMeasure3)
+                                    put("strMeasure4", cocktail.strMeasure4)
+                                    put("strMeasure5", cocktail.strMeasure5)
+                                    put("strMeasure6", cocktail.strMeasure6)
+                                    put("strMeasure7", cocktail.strMeasure7)
+                                    put("strMeasure8", cocktail.strMeasure8)
+                                    put("strMeasure9", cocktail.strMeasure9)
+                                    put("strMeasure10", cocktail.strMeasure10)
+                                    put("strMeasure11", cocktail.strMeasure11)
+                                    put("strMeasure12", cocktail.strMeasure12)
+                                    put("strMeasure13", cocktail.strMeasure13)
+                                    put("strMeasure14", cocktail.strMeasure14)
+                                    put("strMeasure15", cocktail.strMeasure15)
+                                    put(
+                                        "strCreativeCommonsConfirmed",
+                                        cocktail.strCreativeCommonsConfirmed
+                                    )
+                                    put("Image", img)
+
+                                }
+
+                                if (!drinkExists(cocktail.idDrink, database)) {
+                                    database.insert(TABLE_NAME, null, values);
+                                }
+                            } else {
+
+                                println(cocktail.strDrinkThumb.toString())
                             }
+                        }catch (e: Exception){
+
+                            print("immage error: e" + e)
+                            println(cocktail.strDrinkThumb.toString())
                         }
                     }
                 } else {
@@ -340,6 +373,3 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
         client.close()
     }
 }
-
-
-
