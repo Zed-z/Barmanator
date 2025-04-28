@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
@@ -56,18 +58,17 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit,
                 .padding(paddingValues)
                 .fillMaxSize()
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             if (!isTablet) {
                 Button(onClick = onBack) {
                     Text("Back")
                 }
             }
-            Row {
-                Text(text = drink.name, style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.ExtraBold
-                ))
-                Text(text = drink.category, style = MaterialTheme.typography.bodyLarge)
-            }
+            Text(text = drink.name, style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.ExtraBold
+            ))
+            Text(text = drink.category, style = MaterialTheme.typography.bodyLarge)
             if (drink.image != null) {
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -81,8 +82,14 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit,
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
+            Text(text = "Instructions", style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.ExtraBold
+            ))
             Text(text = drink.instructions)
             Spacer(modifier = Modifier.height(32.dp))
+            Text(text = "Ingredients", style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.ExtraBold
+            ))
             Row (
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -95,7 +102,7 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit,
                     Text(text = drink.measures.joinToString(separator = "\n") { "($it)" }, textAlign = TextAlign.End)
                 }
             }
-
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }

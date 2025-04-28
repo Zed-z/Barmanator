@@ -75,7 +75,8 @@ fun MainScreen(drinks: List<Drink>) {
         TabItem("Shots", R.drawable.drink),
         TabItem("Ordinary", R.drawable.drink),
         TabItem("Cocktails", R.drawable.drink),
-        TabItem("Settings", R.drawable.home)
+        TabItem("Punches", R.drawable.drink),
+        TabItem("Others", R.drawable.drink)
     )
     val pagerState = rememberPagerState(
         initialPage = 0,
@@ -87,6 +88,7 @@ fun MainScreen(drinks: List<Drink>) {
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
         bottomBar = {
             ScrollableTabRow(
+                edgePadding = 0.dp,
                 selectedTabIndex = pagerState.currentPage
             ) {
                 tabs.forEachIndexed { index, tab ->
@@ -123,7 +125,8 @@ fun MainScreen(drinks: List<Drink>) {
                 "Shots" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Shot") })
                 "Ordinary" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Ordinary") })
                 "Cocktails" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Cocktail") })
-                "Settings" -> Settings(Modifier)
+                "Punches" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Punch") })
+                "Others" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Other") })
             }
         }
     }
