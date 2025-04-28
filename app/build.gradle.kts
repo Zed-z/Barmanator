@@ -46,7 +46,6 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.room.common)
     val composeBom = platform("androidx.compose:compose-bom:2025.02.00")
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -112,8 +111,15 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.material3.window.size.class1)
 
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.foundation)
+    implementation(libs.androidx.foundation)
 
+    implementation(libs.androidx.lifecycle.viewmodel.compose.v261) // or newer
+    implementation(libs.runtime.livedata)      // for `collectAsState()` and such
 
-
+    implementation(libs.accompanist.pager.v0320)
+    implementation(libs.accompanist.pager.indicators)
 }
