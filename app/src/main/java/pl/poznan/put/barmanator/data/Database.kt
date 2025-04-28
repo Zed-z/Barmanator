@@ -204,7 +204,7 @@ $STRCREATIVECOMMONSCONFIRMED TEXT
         val insertQuerry = """
             INSERT INTO $TABLE_NAME(STRDRINK, STRCATEGORY, STRALCOHOLIC, STRGLASS, STRINSTRUCTIONS, STRDRINKTHUMB, STRINGREDIENT1, STRINGREDIENT2, STRINGREDIENT3, STRINGREDIENT4, STRINGREDIENT5, STRINGREDIENT6, STRINGREDIENT7, STRINGREDIENT8, STRINGREDIENT9, STRINGREDIENT10, STRINGREDIENT11, STRINGREDIENT12, STRINGREDIENT13, STRINGREDIENT14, STRINGREDIENT15, STRMEASURE1, STRMEASURE2, STRMEASURE3, STRMEASURE4, STRMEASURE5, STRMEASURE6, STRMEASURE7, STRMEASURE8, STRMEASURE9, STRMEASURE10, STRMEASURE11, STRMEASURE12, STRMEASURE13, STRMEASURE14, STRMEASURE15, STRCREATIVECOMMONSCONFIRMED)""".trimIndent()
 
-        
+
 
         
 //        db.insert(TABLE_NAME, null,   ContentValues().apply { put(COLUMN_NAME,"Zombie"); put(COLUMN_TAGLINE," Tropikalny potwór"); put(COLUMN_DESCRIPTION," Zombie to jeden z najbardziej intensywnych koktajli, który łączy kilka rodzajów rumu z owocowymi sokami i likierami. Jest mocny, pełen smaku i bardzo orzeźwiający."); put(COLUMN_PREPARATION," Przygotowanie: Wymieszaj rum, sok ananasowy, sok z limonki, grenadynę, maraschino i angosturę w shakerze z lodem, przelej do szklanki."); put(COLUMN_INGREDIENTS," Składniki: 30 ml białego rumu, 30 ml ciemnego rumu, 15 ml rumu overproof, 50 ml soku ananasowego, 25 ml soku z limonki, 10 ml grenadyny, 10 ml likieru maraschino, 2-3 krople angostury, kostki lodu")})
