@@ -122,4 +122,6 @@ dependencies {
 
     implementation(libs.accompanist.pager.v0320)
     implementation(libs.accompanist.pager.indicators)
+
+    implementation(libs.coil)
 }

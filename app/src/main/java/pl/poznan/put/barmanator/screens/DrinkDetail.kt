@@ -21,14 +21,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import pl.poznan.put.barmanator.data.Drink
 import pl.poznan.put.barmanator.utils.Timer
 import pl.poznan.put.barmanator.utils.TimerViewModel
+import pl.poznan.put.barmanator.R
 
 @Composable
 fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit, isTablet: Boolean) {
@@ -67,8 +70,11 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit,
             }
             if (drink.image != null) {
                 Spacer(modifier = Modifier.height(32.dp))
-                Image(
-                    bitmap = drink.image,
+
+
+                AsyncImage(
+                    model = drink.image,
+                    placeholder =  painterResource(R.drawable.hourglass),
                     contentDescription = null,
                     modifier = Modifier.fillMaxWidth().height(200.dp),
                     contentScale = ContentScale.Crop

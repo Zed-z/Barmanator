@@ -29,8 +29,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.AsyncImage
+import pl.poznan.put.barmanator.R
 import pl.poznan.put.barmanator.ui.theme.BarmanatorTheme
+import pl.poznan.put.barmanator.utils.StrokeText
 
 
 @Composable
@@ -44,10 +48,13 @@ fun DrinkListItem(drink: Drink, onClick: () -> Unit) {
             .clickable { onClick() }
     ) {
         if (drink.image != null) {
-            Image(
-                bitmap = drink.image,
+
+
+            AsyncImage(
+                model = drink.image,
                 contentDescription = null,
-                modifier = Modifier.height(200.dp),
+                placeholder =  painterResource(R.drawable.hourglass),
+                modifier = Modifier.fillMaxWidth().height(200.dp),
                 contentScale = ContentScale.Crop
             )
         }
@@ -64,13 +71,13 @@ fun DrinkListItem(drink: Drink, onClick: () -> Unit) {
                     Column(
                         modifier = Modifier
                     ) {
-                        Text(
-                            text = drink.name,
+                        StrokeText(
+                            content = drink.name,
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.ExtraBold
                             )
                         )
-                        Text(text = drink.category)
+                        StrokeText(content = drink.category)
                     }
                 }
             }

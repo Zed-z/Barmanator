@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.BitmapFactory
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import io.ktor.client.*
@@ -22,6 +23,8 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpTimeout
 
 import kotlinx.serialization.Serializable
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -85,7 +88,8 @@ data class Drink(
     val ingredients: List<String> = ArrayList<String>(),
     val measures: List<String> =ArrayList<String>(),
 
-    val image: ImageBitmap?
+    val image : String?
+
 
 )
 
@@ -137,8 +141,6 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
         const val STRMEASURE14 = "strMeasure14"
         const val STRMEASURE15 = "strMeasure15"
         const val STRCREATIVECOMMONSCONFIRMED = "strCreativeCommonsConfirmed"
-        const val IMAGE = "Image"
-
     }
 
     override fun onCreate(db: SQLiteDatabase)  {
@@ -181,8 +183,8 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                 $STRMEASURE13 TEXT ,
                 $STRMEASURE14 TEXT ,
                 $STRMEASURE15 TEXT ,
-                $STRCREATIVECOMMONSCONFIRMED TEXT ,
-                $IMAGE BLOB
+                $STRCREATIVECOMMONSCONFIRMED TEXT 
+
             )
         """.trimIndent()
         db.execSQL(query)
@@ -205,13 +207,8 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                 val name = getString(getColumnIndexOrThrow(STRDRINK))
                 val category = getString(getColumnIndexOrThrow(STRCATEGORY))
                 val instructions = getString(getColumnIndexOrThrow(STRINSTRUCTIONS))
+                var url = getString(getColumnIndexOrThrow(STRDRINKTHUMB))
 
-                val imageBytes : ByteArray = getBlob(getColumnIndexOrThrow(IMAGE))
-                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                var imageBitmap: ImageBitmap? = null
-                if (bitmap != null) {
-                    imageBitmap = bitmap.asImageBitmap()
-                }
 
                 val ingredients = mutableListOf<String>()
                 val measures = mutableListOf<String>()
@@ -230,7 +227,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                     }
                 }
 
-                data.add(Drink(id, name, category, instructions,ingredients,measures,imageBitmap))
+                data.add(Drink(id, name, category, instructions,ingredients,measures, url))
             }
         }
         cursor.close()
@@ -287,20 +284,9 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                     println("Parsed Result: ${result.drinks}")
 
                     for (cocktail in result.drinks) {
-                        try {
-                            var image_response: HttpResponse =
-                                client.get(cocktail.strDrinkThumb.toString())
-                            headers {
-                                append(
-                                    HttpHeaders.Accept,
-                                    "image/webp,image/apng,image/*,*/*;q=0.8"
-                                )
-                                append(
-                                    HttpHeaders.UserAgent,
-                                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-                                )
-                            }
-                            var img: ByteArray? = image_response.body()
+
+
+
                             if (response.status == HttpStatusCode.OK) {
 
                                 val values = ContentValues().apply {
@@ -345,7 +331,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                                         "strCreativeCommonsConfirmed",
                                         cocktail.strCreativeCommonsConfirmed
                                     )
-                                    put("Image", img)
+
 
                                 }
 
@@ -356,11 +342,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
 
                                 println(cocktail.strDrinkThumb.toString())
                             }
-                        }catch (e: Exception){
 
-                            print("immage error: e" + e)
-                            println(cocktail.strDrinkThumb.toString())
-                        }
                     }
                 } else {
                     println("Request failed with status: ${response.status}")
