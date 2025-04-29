@@ -16,11 +16,13 @@ import androidx.compose.ui.unit.dp
 import pl.poznan.put.barmanator.ui.theme.BarmanatorTheme
 
 import androidx.compose.material.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.core.view.WindowCompat
 import pl.poznan.put.barmanator.data.Database
 import pl.poznan.put.barmanator.data.Drink
 import pl.poznan.put.barmanator.screens.HomeScreen
@@ -71,12 +73,12 @@ data class TabItem(
 fun MainScreen(drinks: List<Drink>) {
     val tabs = listOf(
         TabItem("Home", R.drawable.home),
-        TabItem("All", R.drawable.drink),
-        TabItem("Shots", R.drawable.drink),
+        TabItem("All", R.drawable.all),
         TabItem("Ordinary", R.drawable.drink),
-        TabItem("Cocktails", R.drawable.drink),
-        TabItem("Punches", R.drawable.drink),
-        TabItem("Others", R.drawable.drink)
+        TabItem("Shots", R.drawable.shot),
+        TabItem("Cocktails", R.drawable.shaker),
+        TabItem("Punches", R.drawable.punch),
+        TabItem("Others", R.drawable.others)
     )
     val pagerState = rememberPagerState(
         initialPage = 0,
@@ -105,7 +107,7 @@ fun MainScreen(drinks: List<Drink>) {
                                 modifier = Modifier.size(48.dp),
                                 painter = painterResource(id = tab.iconRes),
                                 contentDescription = tab.title,
-                                tint = Color.Unspecified
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                     )
@@ -122,8 +124,8 @@ fun MainScreen(drinks: List<Drink>) {
             when (tabs[page].title) {
                 "Home" -> HomeScreen(Modifier)
                 "All" -> DrinkListScreen(drinks, Modifier)
-                "Shots" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Shot") })
                 "Ordinary" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Ordinary") })
+                "Shots" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Shot") })
                 "Cocktails" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Cocktail") })
                 "Punches" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Punch") })
                 "Others" -> DrinkListScreen(drinks, Modifier, filter = { it.category.contains("Other") })
