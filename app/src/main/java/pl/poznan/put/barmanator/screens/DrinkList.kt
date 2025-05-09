@@ -166,7 +166,7 @@ fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier, filter: 
                 drink?.let {
                     DrinkDetail(
                         isTablet = isTablet,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(3f),
                         drink = it,
                         onBack = {
                             if (selectedDrinkHistory.size > 1) {

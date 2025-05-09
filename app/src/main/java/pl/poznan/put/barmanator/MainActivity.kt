@@ -16,12 +16,20 @@ import androidx.compose.ui.unit.dp
 import pl.poznan.put.barmanator.ui.theme.BarmanatorTheme
 
 import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.view.WindowCompat
 import pl.poznan.put.barmanator.data.Database
 import pl.poznan.put.barmanator.data.Drink
@@ -69,6 +77,7 @@ data class TabItem(
     val iconRes: Int
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(drinks: List<Drink>) {
     val tabs = listOf(
