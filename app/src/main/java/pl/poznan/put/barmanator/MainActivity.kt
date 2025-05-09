@@ -54,9 +54,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreenPreview() {
     val sampleDrinks = listOf(
-        Drink(1, "Zombie", "Strong", "Shake well with ice", emptyList(), emptyList(), null),
-        Drink(2, "Mojito", "Classic", "Muddle mint, add rum and soda", emptyList(), emptyList(), null),
-        Drink(3, "Old Fashioned", "Smooth", "Stir whiskey with bitters", emptyList(), emptyList(), null)
+        Drink(1, "Zombie", "Strong", "Shake well with ice", emptyList(), emptyList(), emptyList(), null),
+        Drink(2, "Mojito", "Classic", "Muddle mint, add rum and soda", emptyList(), emptyList(), emptyList(), null),
+        Drink(3, "Old Fashioned", "Smooth", "Stir whiskey with bitters", emptyList(), emptyList(), emptyList(), null)
     )
 
     BarmanatorTheme {

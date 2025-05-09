@@ -87,6 +87,7 @@ data class Drink(
 
     val ingredients: List<String> = ArrayList<String>(),
     val measures: List<String> =ArrayList<String>(),
+    val ingredientsMeasutes: List<Pair<String, String>>,
 
     val image : String?
 
@@ -227,7 +228,8 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                     }
                 }
 
-                data.add(Drink(id, name, category, instructions,ingredients,measures, url))
+                val ingredientsMeasures = ingredients.zip(measures)
+                data.add(Drink(id, name, category, instructions,ingredients,measures,ingredientsMeasures,url))
             }
         }
         cursor.close()

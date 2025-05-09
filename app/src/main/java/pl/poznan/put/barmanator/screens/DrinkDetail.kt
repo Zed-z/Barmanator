@@ -34,6 +34,7 @@ import pl.poznan.put.barmanator.data.Drink
 import pl.poznan.put.barmanator.utils.Timer
 import pl.poznan.put.barmanator.utils.TimerViewModel
 import pl.poznan.put.barmanator.R
+import pl.poznan.put.barmanator.utils.SmsButton
 
 @Composable
 fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit, isTablet: Boolean) {
@@ -102,6 +103,13 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit,
                     Text(text = drink.measures.joinToString(separator = "\n") { "($it)" }, textAlign = TextAlign.End)
                 }
             }
+            Spacer(modifier = Modifier.height(32.dp))
+            SmsButton(
+                buttonText = "Send Ingredients via SMS...",
+                message = drink.ingredientsMeasutes.joinToString(separator = "\n") {
+                    (i, m) -> "$i ($m)"
+                }
+            )
             Spacer(modifier = Modifier.height(100.dp))
         }
     }
