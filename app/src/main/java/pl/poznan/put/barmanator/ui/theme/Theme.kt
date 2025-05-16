@@ -17,22 +17,24 @@ import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF871616),
-    secondary = Color(0xFFFCBA03),
+    primary = Color(0xFFB72929),
+    secondary = Color(0xFF871616),
     tertiary = Color(0xFF859fC9),
 
-    primaryContainer = Color(0xFF859fC9),
+    primaryContainer = Color(0xFF871616),
+    secondaryContainer = Color(0xFF520909),
 
     background = Color(0xFF101020),
     surface = Color(0xFF202030),
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF871616),
-    secondary = Color(0xFFFCBA03),
+    primary = Color(0xFFB72929),
+    secondary = Color(0xFF871616),
     tertiary = Color(0xFF859fC9),
 
-    primaryContainer = Color(0xFF859fC9),
+    primaryContainer = Color(0xFF871616),
+    secondaryContainer = Color(0xFF520909),
 
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
@@ -68,6 +70,7 @@ fun BarmanatorTheme(
     // System bar theme appropriate icons
     val systemUiController = rememberSystemUiController()
     if (darkTheme) {
+        systemUiController.setStatusBarColor(color = colorScheme.secondaryContainer)
         systemUiController.setSystemBarsColor(Color.Transparent)
     } else {
         systemUiController.setSystemBarsColor(Color.White)

@@ -1,6 +1,7 @@
 package pl.poznan.put.barmanator.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import pl.poznan.put.barmanator.R
 
@@ -26,7 +28,10 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Column {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Image(
                 modifier = Modifier.size(500.dp),
                 contentDescription = "App Icon",
@@ -34,10 +39,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             )
             Text(
                 text = "Welcome to Barmanator!",
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
             )
             Text(
                 text = "Made by: 156080, 156022",
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Normal)
             )
         }
