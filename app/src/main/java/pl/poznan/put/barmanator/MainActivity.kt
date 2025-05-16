@@ -40,7 +40,6 @@ import androidx.core.view.WindowCompat
 import pl.poznan.put.barmanator.data.Database
 import pl.poznan.put.barmanator.data.Drink
 import pl.poznan.put.barmanator.screens.HomeScreen
-import pl.poznan.put.barmanator.screens.Settings
 import androidx.navigation.compose.*
 import kotlinx.coroutines.launch
 import pl.poznan.put.barmanator.screens.DrinkListScreen
