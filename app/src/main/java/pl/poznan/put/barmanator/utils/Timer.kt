@@ -136,7 +136,6 @@ fun Timer(
         }
     }
 
-    println("AAAAAAAAAAAAAAAAAA" + timePickerVisible)
     if (timePickerVisible) {
         TimerTimePicker(
             time = time.value,
@@ -156,7 +155,9 @@ fun Timer(
         FloatingActionButton(
             onClick = {
                 timePickerVisible = true
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.primaryContainer
         ) {
             Icon(
                 modifier = Modifier.size(24.dp),
@@ -176,6 +177,8 @@ fun Timer(
                     viewModel.setRunning(false)
                 }
             },
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.primaryContainer,
             icon = {
                 Icon(
                     modifier = Modifier.size(24.dp),
@@ -201,7 +204,9 @@ fun Timer(
             onClick = {
                 viewModel.resetTime()
                 viewModel.setRunning(false)
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.primaryContainer
         ) {
             Icon(
                 modifier = Modifier.size(24.dp),

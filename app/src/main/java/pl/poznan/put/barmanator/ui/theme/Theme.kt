@@ -19,13 +19,20 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF871616),
     secondary = Color(0xFFFCBA03),
-    tertiary = Color(0xFF859fC9)
+    tertiary = Color(0xFF859fC9),
+
+    primaryContainer = Color(0xFF859fC9),
+
+    background = Color(0xFF101020),
+    surface = Color(0xFF202030),
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFF871616),
     secondary = Color(0xFFFCBA03),
     tertiary = Color(0xFF859fC9),
+
+    primaryContainer = Color(0xFF859fC9),
 
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
@@ -44,11 +51,6 @@ fun BarmanatorTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -65,11 +67,10 @@ fun BarmanatorTheme(
 
     // System bar theme appropriate icons
     val systemUiController = rememberSystemUiController()
-    SideEffect {
-        systemUiController.setSystemBarsColor(
-            color = Color.Transparent,
-            darkIcons = !darkTheme
-        )
+    if (darkTheme) {
+        systemUiController.setSystemBarsColor(Color.Transparent)
+    } else {
+        systemUiController.setSystemBarsColor(Color.White)
     }
 
     MaterialTheme(
