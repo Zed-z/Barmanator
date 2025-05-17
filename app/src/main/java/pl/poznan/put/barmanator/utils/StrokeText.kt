@@ -3,6 +3,7 @@ package pl.poznan.put.barmanator.utils
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,9 +42,22 @@ import kotlin.math.min
 import kotlin.math.max
 import kotlin.time.Duration.Companion.seconds
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.AnnotatedString
+
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
@@ -53,36 +67,27 @@ fun StrokeText(
     colorFront : Color = Color.White,
     colorBack : Color = Color.Black,
 
-    style : TextStyle = LocalTextStyle.current
+    style : TextStyle
+
 
 
 
 ){
+    Box {
 
-    Box{
-        Text(
-            text = content,
-            color = colorBack,
-            style = style,
-            modifier = Modifier.padding(1.dp),
-            textAlign = style.textAlign ?: TextAlign.Start
-
-
-        )
 
         Text(
+
             text = content,
-            color = colorFront,
-            style = style,
-            textAlign = style.textAlign ?: TextAlign.Start
+            modifier = Modifier.fillMaxWidth(),
+            style = style.copy(
+                shadow = Shadow(
+                    color = colorBack,
+                    offset = Offset(4f, 4f),
+                    blurRadius = 8f
+                )
+            )
         )
-
-
-
-
-
-
-
     }
 
 }

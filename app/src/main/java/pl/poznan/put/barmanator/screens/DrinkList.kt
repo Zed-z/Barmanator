@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -75,9 +76,11 @@ fun DrinkListItem(drink: Drink, onClick: () -> Unit) {
                             content = drink.name,
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.ExtraBold
-                            )
+                            ),
+
                         )
-                        StrokeText(content = drink.category)
+                        StrokeText(content = drink.category,
+                            style = MaterialTheme.typography.titleMedium.copy())
                     }
                 }
             }
