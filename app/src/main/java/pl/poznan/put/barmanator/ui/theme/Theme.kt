@@ -70,7 +70,6 @@ fun BarmanatorTheme(
     // System bar theme appropriate icons
     val systemUiController = rememberSystemUiController()
     if (darkTheme) {
-        systemUiController.setStatusBarColor(color = colorScheme.secondaryContainer)
         systemUiController.setSystemBarsColor(Color.Transparent)
     } else {
         systemUiController.setSystemBarsColor(Color.White)

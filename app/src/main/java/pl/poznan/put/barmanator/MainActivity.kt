@@ -3,6 +3,7 @@ package pl.poznan.put.barmanator
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -36,6 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.zIndex
 import androidx.core.view.WindowCompat
 import pl.poznan.put.barmanator.data.Database
 import pl.poznan.put.barmanator.data.Drink
@@ -43,6 +45,7 @@ import pl.poznan.put.barmanator.screens.HomeScreen
 import androidx.navigation.compose.*
 import kotlinx.coroutines.launch
 import pl.poznan.put.barmanator.screens.DrinkListScreen
+import pl.poznan.put.barmanator.utils.LiquidBg
 
 class MainActivity : ComponentActivity() {
 
@@ -101,65 +104,37 @@ fun MainScreen(drinks: List<Drink>) {
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Spacer(Modifier.height(16.dp))
-                tabs.forEachIndexed { index, tab ->
-                    NavigationDrawerItem(
-                        label = { Text(tab.title) },
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(index)
-                                drawerState.close()
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                modifier = Modifier.size(48.dp),
-                                painter = painterResource(id = tab.iconRes),
-                                contentDescription = tab.title,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    )
-                }
-            }
-        }
-    ) {
-        Scaffold(
-            modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = { Text(tabs[pagerState.currentPage].title) },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            coroutineScope.launch { drawerState.open() }
-                        }) {
-                            Icon(Icons.Filled.Menu, contentDescription = "Menu")
-                        }
-                    },
-                    colors = TopAppBarDefaults.mediumTopAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                    )
-                )
-            },
-            bottomBar = {
-                ScrollableTabRow(
-                    edgePadding = 0.dp,
-                    selectedTabIndex = pagerState.currentPage
-                ) {
+
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .zIndex(0f)
+        )
+
+        LiquidBg(
+            waveColor = MaterialTheme.colorScheme.secondaryContainer,
+            modifier = Modifier
+                .fillMaxSize()
+        )
+
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet {
+                    Spacer(Modifier.height(16.dp))
                     tabs.forEachIndexed { index, tab ->
-                        Tab(
+                        NavigationDrawerItem(
+                            label = { Text(tab.title) },
                             selected = pagerState.currentPage == index,
                             onClick = {
                                 coroutineScope.launch {
                                     pagerState.animateScrollToPage(index)
+                                    drawerState.close()
                                 }
                             },
-                            text = { Text(tab.title) },
                             icon = {
                                 Icon(
                                     modifier = Modifier.size(48.dp),
@@ -172,40 +147,86 @@ fun MainScreen(drinks: List<Drink>) {
                     }
                 }
             }
-        ) { paddingValues ->
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) { page ->
-                when (tabs[page].title) {
-                    "Home" -> HomeScreen(Modifier)
-                    "All" -> DrinkListScreen(drinks, Modifier)
-                    "Ordinary" -> DrinkListScreen(
-                        drinks,
-                        Modifier,
-                        filter = { it.category.contains("Ordinary") })
+        ) {
+            Scaffold(
+                containerColor = Color.Transparent,
+                modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
+                topBar = {
+                    CenterAlignedTopAppBar(
+                        title = { Text(tabs[pagerState.currentPage].title) },
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                coroutineScope.launch { drawerState.open() }
+                            }) {
+                                Icon(Icons.Filled.Menu, contentDescription = "Menu")
+                            }
+                        },
+                        colors = TopAppBarDefaults.mediumTopAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    )
+                },
+                bottomBar = {
+                    ScrollableTabRow(
+                        edgePadding = 0.dp,
+                        selectedTabIndex = pagerState.currentPage
+                    ) {
+                        tabs.forEachIndexed { index, tab ->
+                            Tab(
+                                selected = pagerState.currentPage == index,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
+                                text = { Text(tab.title) },
+                                icon = {
+                                    Icon(
+                                        modifier = Modifier.size(48.dp),
+                                        painter = painterResource(id = tab.iconRes),
+                                        contentDescription = tab.title,
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            ) { paddingValues ->
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) { page ->
+                    when (tabs[page].title) {
+                        "Home" -> HomeScreen(Modifier)
+                        "All" -> DrinkListScreen(drinks, Modifier)
+                        "Ordinary" -> DrinkListScreen(
+                            drinks,
+                            Modifier,
+                            filter = { it.category.contains("Ordinary") })
 
-                    "Shots" -> DrinkListScreen(
-                        drinks,
-                        Modifier,
-                        filter = { it.category.contains("Shot") })
+                        "Shots" -> DrinkListScreen(
+                            drinks,
+                            Modifier,
+                            filter = { it.category.contains("Shot") })
 
-                    "Cocktails" -> DrinkListScreen(
-                        drinks,
-                        Modifier,
-                        filter = { it.category.contains("Cocktail") })
+                        "Cocktails" -> DrinkListScreen(
+                            drinks,
+                            Modifier,
+                            filter = { it.category.contains("Cocktail") })
 
-                    "Punches" -> DrinkListScreen(
-                        drinks,
-                        Modifier,
-                        filter = { it.category.contains("Punch") })
+                        "Punches" -> DrinkListScreen(
+                            drinks,
+                            Modifier,
+                            filter = { it.category.contains("Punch") })
 
-                    "Others" -> DrinkListScreen(
-                        drinks,
-                        Modifier,
-                        filter = { it.category.contains("Other") })
+                        "Others" -> DrinkListScreen(
+                            drinks,
+                            Modifier,
+                            filter = { it.category.contains("Other") })
+                    }
                 }
             }
         }
