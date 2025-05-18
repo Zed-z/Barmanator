@@ -64,8 +64,8 @@ import androidx.compose.ui.text.style.TextAlign
 fun StrokeText(
     content : String,
 
-    colorFront : Color = Color.White,
-    colorBack : Color = Color.Black,
+    colorFront : Color = MaterialTheme.colorScheme.primary,
+    colorBack : Color = MaterialTheme.colorScheme.tertiary,
 
     style : TextStyle
 
@@ -77,7 +77,7 @@ fun StrokeText(
 
 
         Text(
-
+            color = colorFront,
             text = content,
             modifier = Modifier.fillMaxWidth(),
             style = style.copy(
@@ -86,6 +86,7 @@ fun StrokeText(
                     offset = Offset(4f, 4f),
                     blurRadius = 8f
                 )
+
             )
         )
     }

@@ -29,21 +29,60 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFFB72929),
-    secondary = Color(0xFF871616),
-    tertiary = Color(0xFF859fC9),
+    primary = Color(0xFF2d1c7f),
+    secondary = Color(0xFF0d0e20),
+    tertiary = Color(0xFF7546e8),
 
-    primaryContainer = Color(0xFF871616),
-    secondaryContainer = Color(0xFF520909),
+    primaryContainer = Color(0xFF7546e8),
+    secondaryContainer = Color(0xFF7546e8),
 
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    background = Color(0xFFB0A9E5),
+    surface = Color(0xFFC8B3F6),
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
     onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
 )
+
+private val LightColrtSchemeAlt = lightColorScheme(
+    primary = Color(0xFF1f0822),
+    secondary = Color(0xFFD180c8),
+    tertiary = Color( 0xFFF9ce75),
+
+    primaryContainer = Color(0xFFE77665),
+    secondaryContainer = Color(0xFFD180c8),
+
+    background = Color(0xFFF9ce75),
+    surface = Color(0xFF814881),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color(0xFF1C1B1F),
+    onSurface = Color(0xFF1C1B1F),
+
+
+)
+
+private val LightColrtSchemeAlt2 = lightColorScheme(
+    primary = Color(0xFF373459),
+    secondary = Color(0xFFc8b69d),
+    tertiary = Color(0xFFc8b69d),
+
+    primaryContainer = Color(0xFF572216),
+    secondaryContainer = Color(0xFF763020),
+
+    background = Color(0xFFc8b69d),
+    surface = Color(0xFF927e64),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color(0xFF1C1B1F),
+    onSurface = Color(0xFF1C1B1F),
+
+
+    )
+
 
 @Composable
 fun BarmanatorTheme(
@@ -54,7 +93,7 @@ fun BarmanatorTheme(
 ) {
     val colorScheme = when {
         darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        else -> LightColrtSchemeAlt2
     }
 
 
