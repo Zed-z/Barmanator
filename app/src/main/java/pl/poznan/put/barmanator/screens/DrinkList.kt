@@ -26,15 +26,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.Button
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pl.poznan.put.barmanator.R
 import pl.poznan.put.barmanator.ui.theme.BarmanatorTheme
+import pl.poznan.put.barmanator.utils.LocalDatabase
 import pl.poznan.put.barmanator.utils.StrokeText
 
 
@@ -107,8 +115,33 @@ fun DrinkList(
     drinks: List<Drink> = ArrayList<Drink>(),
     modifier: Modifier = Modifier,
     onDrinkClick: (Long) -> Unit,
-    filter: (Drink) -> Boolean
+    filter: (Drink) -> Boolean,
+
 ) {
+    var query by remember {mutableStateOf("")}
+
+    var dat = LocalDatabase.current
+
+    Column  {
+        TextField(
+            value = query,
+            modifier = Modifier.fillMaxWidth(),
+            onValueChange = { query = it }
+        )
+        Button(onClick = {
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    var s = dat.SearchDrink(query)
+                    println("aaaaaa" + s)
+                }
+
+        }){
+            Text("Submit")
+        }
+    }
+
+
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier.fillMaxSize(),

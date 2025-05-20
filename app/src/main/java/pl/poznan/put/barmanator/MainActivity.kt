@@ -33,6 +33,7 @@ import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -46,6 +47,7 @@ import androidx.navigation.compose.*
 import kotlinx.coroutines.launch
 import pl.poznan.put.barmanator.screens.DrinkListScreen
 import pl.poznan.put.barmanator.utils.LiquidBg
+import pl.poznan.put.barmanator.utils.LocalDatabase
 
 class MainActivity : ComponentActivity() {
 
@@ -59,8 +61,10 @@ class MainActivity : ComponentActivity() {
 
         //enableEdgeToEdge()
         setContent {
-            BarmanatorTheme {
-                MainScreen(database.getDrinks())
+            CompositionLocalProvider(LocalDatabase provides database) {
+                BarmanatorTheme {
+                    MainScreen(database.getDrinks())
+                }
             }
         }
     }
