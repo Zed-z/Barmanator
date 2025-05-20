@@ -3,6 +3,7 @@ package pl.poznan.put.barmanator.screens
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,11 +30,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -47,35 +56,61 @@ import pl.poznan.put.barmanator.utils.Timer
 import pl.poznan.put.barmanator.utils.TimerViewModel
 import pl.poznan.put.barmanator.R
 import pl.poznan.put.barmanator.utils.SmsButton
+import kotlin.math.max
+import kotlin.math.min
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ImageTopAppBar(
+fun TopAppBar(
     drink: Drink,
     isTablet: Boolean,
     onBack: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
-    Box {
-        AsyncImage(
-            model = drink.image,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp), // Adjust to your desired app bar height
-            contentScale = ContentScale.Crop
-        )
+    val collapse = (1f - scrollBehavior.state.collapsedFraction).coerceIn(0f, 1f)
+    val toolbarHeightMin = 64.dp
+    val toolbarHeightMax = 250.dp
+
+    val density = LocalDensity.current
+    val toolbarHeightPx = with(density) {
+        (toolbarHeightMin + (toolbarHeightMax - toolbarHeightMin) * collapse).toPx()
+            .coerceAtLeast(1f)
+    }
+    val toolbarHeightDp = with(density) { toolbarHeightPx.toDp() }
+
+    println("Toolbar height: $toolbarHeightDp")
+
+    Box(
+        modifier = Modifier
+            .height(toolbarHeightDp)
+            .fillMaxWidth()
+    ) {
+        if (drink.image != null) {
+            AsyncImage(
+                model = drink.image,
+                placeholder = painterResource(R.drawable.hourglass),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(toolbarHeightDp),
+                contentScale = ContentScale.Crop
+            )
+        }
+
         LargeTopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.primary,
-            ),
             title = {
                 Column {
-                    Text(text = drink.name, style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.ExtraBold
-                    ))
+                    Text(
+                        text = drink.name,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.ExtraBold
+                        ),
+                        modifier = Modifier
+                            .graphicsLayer {
+                                alpha = collapse
+                            }
+                    )
                     Text(text = drink.category, style = MaterialTheme.typography.bodyLarge)
                 }
             },
@@ -84,38 +119,42 @@ fun ImageTopAppBar(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Localized description"
+                            contentDescription = "Back"
                         )
                     }
                 }
             },
-            actions = {
-                IconButton(onClick = { /* do something */ }) {
-                    Icon(
-                        imageVector = Icons.Filled.Menu,
-                        contentDescription = "Localized description"
-                    )
-                }
-            },
             scrollBehavior = scrollBehavior,
+            colors = TopAppBarDefaults.largeTopAppBarColors(
+                containerColor = Color.Transparent,
+                scrolledContainerColor = MaterialTheme.colorScheme.surface
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(toolbarHeightDp)
+                .background(Color.Transparent)
         )
     }
 }
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit, isTablet: Boolean) {
+fun DrinkDetail(
+    modifier: Modifier = Modifier,
+    drink: Drink,
+    onBack: () -> Unit,
+    isTablet: Boolean
+) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val nestedScrollConnection = scrollBehavior.nestedScrollConnection
 
     Scaffold(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .nestedScroll(nestedScrollConnection),
         topBar = {
-            ImageTopAppBar(
+            TopAppBar(
                 drink = drink,
                 scrollBehavior = scrollBehavior,
                 isTablet = isTablet,
@@ -128,8 +167,8 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit,
                     viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner,
                     key = "timer-${drink.id}",
                     initializer = {
-                    TimerViewModel(1 * 60)
-                })
+                        TimerViewModel(1 * 60)
+                    })
             )
         },
         floatingActionButtonPosition = FabPosition.Center
@@ -137,48 +176,42 @@ fun DrinkDetail(modifier: Modifier = Modifier, drink: Drink, onBack: () -> Unit,
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            if (drink.image != null) {
-                Spacer(modifier = Modifier.height(32.dp))
-
-
-                AsyncImage(
-                    model = drink.image,
-                    placeholder =  painterResource(R.drawable.hourglass),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth().height(200.dp),
-                    contentScale = ContentScale.Crop
+            Text(
+                text = "Instructions", style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.ExtraBold
                 )
-            }
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "Instructions", style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.ExtraBold
-            ))
+            )
             Text(text = drink.instructions)
             Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "Ingredients", style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.ExtraBold
-            ))
-            Row (
-                modifier = Modifier.fillMaxSize()
+            Text(
+                text = "Ingredients", style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.ExtraBold
+                )
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Column (
+                Column(
                     modifier = Modifier.weight(2f)
                 ) {
                     Text(text = drink.ingredients.joinToString(separator = "\n") { "- $it" })
                 }
                 Column {
-                    Text(text = drink.measures.joinToString(separator = "\n") { "($it)" }, textAlign = TextAlign.End)
+                    Text(
+                        text = drink.measures.joinToString(separator = "\n") { "($it)" },
+                        textAlign = TextAlign.End
+                    )
                 }
             }
             Spacer(modifier = Modifier.height(32.dp))
             SmsButton(
                 buttonText = "Send Ingredients via SMS...",
-                message = drink.ingredientsMeasutes.joinToString(separator = "\n") {
-                    (i, m) -> "$i ($m)"
+                message = drink.ingredientsMeasutes.joinToString(separator = "\n") { (i, m) ->
+                    "$i ($m)"
                 }
             )
             Spacer(modifier = Modifier.height(100.dp))
