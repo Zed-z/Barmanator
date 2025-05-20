@@ -406,7 +406,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
         try {
 
             val response: DrinkResponse =
-                client.get("www.thecocktaildb.com/api/json/v1/1/random.php").body()
+                client.get("https://www.thecocktaildb.com/api/json/v1/1/random.php").body()
 
             client.close()
 

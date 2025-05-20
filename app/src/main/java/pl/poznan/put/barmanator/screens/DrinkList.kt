@@ -138,21 +138,19 @@ fun DrinkList(
         }){
             Text("Submit")
         }
-    }
 
-
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = modifier.fillMaxSize(),
-        content = {
-            val drinksFiltered = drinks.filter { filter(it) }
-            items(drinksFiltered.size) { drinkId ->
-                val drink = drinksFiltered[drinkId]
-                DrinkListItem(drink = drink, onClick = { onDrinkClick(drink.id) })
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = modifier.fillMaxSize(),
+            content = {
+                val drinksFiltered = drinks.filter { filter(it) }
+                items(drinksFiltered.size) { drinkId ->
+                    val drink = drinksFiltered[drinkId]
+                    DrinkListItem(drink = drink, onClick = { onDrinkClick(drink.id) })
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
