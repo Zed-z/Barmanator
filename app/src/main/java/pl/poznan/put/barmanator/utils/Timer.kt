@@ -118,6 +118,7 @@ fun Timer(
     modifier: Modifier = Modifier,
     viewModel: TimerViewModel
 ) {
+    var initialTime: State<Int> = viewModel.initialTime.collectAsState()
     var time: State<Int> = viewModel.time.collectAsState()
     var running: State<Boolean> = viewModel.running.collectAsState()
 
@@ -138,7 +139,7 @@ fun Timer(
 
     if (timePickerVisible) {
         TimerTimePicker(
-            time = time.value,
+            time = initialTime.value,
             hide = {
                 timePickerVisible = false
             },
