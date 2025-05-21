@@ -101,10 +101,14 @@ fun DrinkListItem(drink: Drink, onClick: () -> Unit) {
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.ExtraBold
                             ),
-
+                            colorFront = MaterialTheme.colorScheme.onTertiary,
+                            colorBack = MaterialTheme.colorScheme.tertiary
                         )
                         StrokeText(content = drink.category,
-                            style = MaterialTheme.typography.titleMedium.copy())
+                            style = MaterialTheme.typography.titleMedium.copy(),
+                            colorFront = MaterialTheme.colorScheme.onTertiary,
+                            colorBack = MaterialTheme.colorScheme.tertiary
+                        )
                     }
                 }
             }

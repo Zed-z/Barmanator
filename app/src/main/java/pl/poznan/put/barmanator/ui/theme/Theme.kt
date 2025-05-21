@@ -28,6 +28,9 @@ private val DarkColorScheme = darkColorScheme(
     secondaryContainer = dark1,
     onSecondaryContainer = white,
 
+    tertiary = black,
+    onTertiary = white,
+
     background = dark2,
     surface = dark2,
 )
@@ -44,8 +47,11 @@ private val LightColorScheme = lightColorScheme(
     secondaryContainer = pink3,
     onSecondaryContainer = black,
 
+    tertiary = black,
+    onTertiary = white,
+
     background = pink1,
-    surface = white,
+    surface = pink1,
 )
 
 
