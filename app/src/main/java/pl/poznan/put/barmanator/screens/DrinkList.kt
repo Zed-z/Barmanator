@@ -131,8 +131,9 @@ fun DrinkList(
         Button(onClick = {
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    var s = dat.SearchDrink(query)
-                    println("aaaaaa" + s)
+                    var s = dat.SearchDrink(query);
+                    println("bbbb" + s)
+                    onDrinkClick(s);
                 }
 
         }){

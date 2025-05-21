@@ -25,6 +25,7 @@ import io.ktor.client.plugins.HttpTimeout
 import kotlinx.serialization.Serializable
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
+import kotlinx.serialization.ExperimentalSerializationApi
 
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -370,17 +371,15 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
         client.close()
     }
 
-    @Serializable
-    data class DrinkSugestion(
-        val strDrink: String
-    )
+
 
     @Serializable
     data class DrinkResponse(
-        val drinks: List<DrinkSugestion>
+        val drinks: List<Cocktail> = emptyList()
     )
 
-    public suspend fun SearchDrink(firstLetter: String): String {
+    @OptIn(ExperimentalSerializationApi::class)
+    public suspend fun SearchDrink(firstLetter: String): Long {
         val client = HttpClient(CIO) {
             install(ContentNegotiation) {
                 json(jsonSettings)
@@ -399,24 +398,104 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                 socketTimeoutMillis = 15_000
             }
             install(ContentNegotiation) {
-                json(Json { ignoreUnknownKeys = true })
+                json(Json {
+                    ignoreUnknownKeys = true
+                    explicitNulls =
+                        false // null traktujemy jak brak pola i bierzemy domyślne wartości
+                    coerceInputValues = true
+                })
             }
         }
 
         try {
 
-            val response: DrinkResponse =
-                client.get("https://www.thecocktaildb.com/api/json/v1/1/random.php").body()
+            val response: HttpResponse =
+                client.get("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=$firstLetter")
 
             client.close()
 
 
-        print("aaaa");
-        return response.drinks[0].strDrink
+            if(response.status == HttpStatusCode.OK) {
+
+                if (response.bodyAsText() == """{"drinks":null}""")
+                    return 0
+
+                var drinkResponse: DrinkResponse = response.body()
+                print("aaaa");
+                var alreadyInDatabase = getDrinks()
+                if (drinkResponse.drinks.isNotEmpty()) {
+
+                    for (cocktail in drinkResponse.drinks) {
+
+
+
+
+                        println("test")
+                        val values = ContentValues().apply {
+                                put("idDrink", cocktail.idDrink)
+                                put("strDrink", cocktail.strDrink)
+                                put("strCategory", cocktail.strCategory)
+                                put("strAlcoholic", cocktail.strAlcoholic)
+                                put("strGlass", cocktail.strGlass)
+                                put("strInstructions", cocktail.strInstructions)
+                                put("strDrinkThumb", cocktail.strDrinkThumb)
+                                put("strIngredient1", cocktail.strIngredient1)
+                                put("strIngredient2", cocktail.strIngredient2)
+                                put("strIngredient3", cocktail.strIngredient3)
+                                put("strIngredient4", cocktail.strIngredient4)
+                                put("strIngredient5", cocktail.strIngredient5)
+                                put("strIngredient6", cocktail.strIngredient6)
+                                put("strIngredient7", cocktail.strIngredient7)
+                                put("strIngredient8", cocktail.strIngredient8)
+                                put("strIngredient9", cocktail.strIngredient9)
+                                put("strIngredient10", cocktail.strIngredient10)
+                                put("strIngredient11", cocktail.strIngredient11)
+                                put("strIngredient12", cocktail.strIngredient12)
+                                put("strIngredient13", cocktail.strIngredient13)
+                                put("strIngredient14", cocktail.strIngredient14)
+                                put("strIngredient15", cocktail.strIngredient15)
+                                put("strMeasure1", cocktail.strMeasure1)
+                                put("strMeasure2", cocktail.strMeasure2)
+                                put("strMeasure3", cocktail.strMeasure3)
+                                put("strMeasure4", cocktail.strMeasure4)
+                                put("strMeasure5", cocktail.strMeasure5)
+                                put("strMeasure6", cocktail.strMeasure6)
+                                put("strMeasure7", cocktail.strMeasure7)
+                                put("strMeasure8", cocktail.strMeasure8)
+                                put("strMeasure9", cocktail.strMeasure9)
+                                put("strMeasure10", cocktail.strMeasure10)
+                                put("strMeasure11", cocktail.strMeasure11)
+                                put("strMeasure12", cocktail.strMeasure12)
+                                put("strMeasure13", cocktail.strMeasure13)
+                                put("strMeasure14", cocktail.strMeasure14)
+                                put("strMeasure15", cocktail.strMeasure15)
+                                put(
+                                    "strCreativeCommonsConfirmed",
+                                    cocktail.strCreativeCommonsConfirmed
+                                )
+
+                            }
+
+                        writableDatabase.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+
+
+
+                    }
+                    return drinkResponse.drinks[0].idDrink;
+
+                }
+            }
+            return 0;
+
         }catch(e: Exception){
             println(" aaaa error fetching sugestions " + e.localizedMessage);
         }
         return TODO("Provide the return value")
     }
+
+
+
 }
+
+
 
