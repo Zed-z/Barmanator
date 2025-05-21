@@ -29,15 +29,18 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat.recreate
 import coil.compose.AsyncImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pl.poznan.put.barmanator.R
@@ -119,32 +122,48 @@ fun DrinkList(
 
 ) {
     var query by remember {mutableStateOf("")}
-
     var dat = LocalDatabase.current
+    var refreshTrigger by remember {  mutableIntStateOf(0) }
+    var actualDrinks  = remember(refreshTrigger)  {mutableStateOf(dat.getDrinks()) };
+
 
     Column  {
+
+
         TextField(
             value = query,
             modifier = Modifier.fillMaxWidth(),
             onValueChange = { query = it }
         )
+
         Button(onClick = {
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    var s = dat.SearchDrink(query);
-                    println("bbbb" + s)
-                    onDrinkClick(s);
-                }
+            CoroutineScope(Dispatchers.IO).launch {
 
-        }){
+
+                try {
+                    dat.SearchDrink(query)
+
+
+                } catch (e: Exception) {
+                    println("bbbbb aaaa")
+                } finally {
+                    // ← to się wykona zawsze, na końcu
+                    println(" bbbb Zakończono launch()")
+                    refreshTrigger++
+                }
+            }
+        }
+        ){
             Text("Submit")
         }
 
+        println("bbbb wwww")
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = modifier.fillMaxSize(),
             content = {
-                val drinksFiltered = drinks.filter { filter(it) }
+                val drinksFiltered = actualDrinks.value.filter { filter(it) } . filter { it.name.lowercase().contains(query.lowercase()) }
                 items(drinksFiltered.size) { drinkId ->
                     val drink = drinksFiltered[drinkId]
                     DrinkListItem(drink = drink, onClick = { onDrinkClick(drink.id) })

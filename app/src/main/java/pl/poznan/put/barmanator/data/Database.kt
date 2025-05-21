@@ -379,7 +379,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
     )
 
     @OptIn(ExperimentalSerializationApi::class)
-    public suspend fun SearchDrink(firstLetter: String): Long {
+    public suspend fun SearchDrink(firstLetter: String): List<Drink> {
         val client = HttpClient(CIO) {
             install(ContentNegotiation) {
                 json(jsonSettings)
@@ -418,10 +418,10 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
             if(response.status == HttpStatusCode.OK) {
 
                 if (response.bodyAsText() == """{"drinks":null}""")
-                    return 0
+                    return getDrinks()
 
                 var drinkResponse: DrinkResponse = response.body()
-                print("aaaa");
+
                 var alreadyInDatabase = getDrinks()
                 if (drinkResponse.drinks.isNotEmpty()) {
 
@@ -430,7 +430,7 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
 
 
 
-                        println("test")
+
                         val values = ContentValues().apply {
                                 put("idDrink", cocktail.idDrink)
                                 put("strDrink", cocktail.strDrink)
@@ -481,11 +481,12 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
 
 
                     }
-                    return drinkResponse.drinks[0].idDrink;
+                    println("bbbbb tutaj baza danych skonczyla")
+                    return getDrinks()
 
                 }
             }
-            return 0;
+            return getDrinks()
 
         }catch(e: Exception){
             println(" aaaa error fetching sugestions " + e.localizedMessage);
