@@ -23,18 +23,29 @@ import pl.poznan.put.barmanator.data.Drink
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat.recreate
 import coil.compose.AsyncImage
@@ -127,38 +138,8 @@ fun DrinkList(
     var actualDrinks  = remember(refreshTrigger)  {mutableStateOf(dat.getDrinks()) };
 
 
-    Column  {
+    Column {
 
-
-        TextField(
-            value = query,
-            modifier = Modifier.fillMaxWidth(),
-            onValueChange = { query = it }
-        )
-
-        Button(onClick = {
-
-            CoroutineScope(Dispatchers.IO).launch {
-
-
-                try {
-                    dat.SearchDrink(query)
-
-
-                } catch (e: Exception) {
-                    println("bbbbb aaaa")
-                } finally {
-                    // ← to się wykona zawsze, na końcu
-                    println(" bbbb Zakończono launch()")
-                    refreshTrigger++
-                }
-            }
-        }
-        ){
-            Text("Submit")
-        }
-
-        println("bbbb wwww")
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = modifier.fillMaxSize(),
@@ -170,6 +151,51 @@ fun DrinkList(
                 }
             }
         )
+
+        Row(
+            modifier = Modifier.padding(16.dp).height(64.dp)
+        ) {
+            TextField(
+                value = query,
+                singleLine = true,
+                modifier = Modifier.weight(5f).fillMaxHeight(),
+                shape = RoundedCornerShape(32.dp),
+                placeholder = {
+                    Text(
+                        text = "Filter / Search...",
+                    )
+                },
+                onValueChange = { query = it },
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        Button(
+                            modifier = Modifier.weight(1f).fillMaxHeight(),
+                            onClick = {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    try {
+                                        dat.SearchDrink(query)
+                                    } catch (e: Exception) {
+                                        println("Exception searching for drink $query")
+                                    } finally {
+                                        // to się wykona zawsze, na końcu
+                                        refreshTrigger++
+                                    }
+                                }
+                            }) {
+                            Icon(
+                                modifier = Modifier.size(48.dp).fillMaxHeight(),
+                                painter = painterResource(id = R.drawable.websearch),
+                                contentDescription = "Search"
+                            )
+                        }
+                    }
+                }
+            )
+        }
     }
 }
 
