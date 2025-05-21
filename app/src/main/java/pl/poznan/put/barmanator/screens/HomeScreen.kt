@@ -40,12 +40,14 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             Text(
                 text = "Welcome to Barmanator!",
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onPrimary
             )
             Text(
                 text = "Made by: 156080, 156022",
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Normal)
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Normal),
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
     }
