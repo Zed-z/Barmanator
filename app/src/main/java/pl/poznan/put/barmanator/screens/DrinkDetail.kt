@@ -47,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -56,6 +57,7 @@ import pl.poznan.put.barmanator.utils.Timer
 import pl.poznan.put.barmanator.utils.TimerViewModel
 import pl.poznan.put.barmanator.R
 import pl.poznan.put.barmanator.utils.SmsButton
+import pl.poznan.put.barmanator.utils.StrokeText
 import kotlin.math.max
 import kotlin.math.min
 
@@ -66,52 +68,54 @@ fun TopAppBar(
     drink: Drink,
     isTablet: Boolean,
     onBack: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
+    toolbarHeightMin: Dp = 64.dp,
+    toolbarHeightMax: Dp = 250.dp
 ) {
     val collapse = (1f - scrollBehavior.state.collapsedFraction).coerceIn(0f, 1f)
-    val toolbarHeightMin = 64.dp
-    val toolbarHeightMax = 250.dp
+    val toolbarHeight = toolbarHeightMin + (toolbarHeightMax - toolbarHeightMin) * collapse
 
-    val density = LocalDensity.current
-    val toolbarHeightPx = with(density) {
-        (toolbarHeightMin + (toolbarHeightMax - toolbarHeightMin) * collapse).toPx()
-            .coerceAtLeast(1f)
-    }
-    val toolbarHeightDp = with(density) { toolbarHeightPx.toDp() }
+    println("Toolbar height: $toolbarHeight")
 
-    println("Toolbar height: $toolbarHeightDp")
-
-    Box(
-        modifier = Modifier
-            .height(toolbarHeightDp)
-            .fillMaxWidth()
-    ) {
-        if (drink.image != null) {
-            AsyncImage(
-                model = drink.image,
-                placeholder = painterResource(R.drawable.hourglass),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(toolbarHeightDp),
-                contentScale = ContentScale.Crop
-            )
+    Box {
+        Box(
+            modifier = Modifier
+                .height(toolbarHeight)
+                .fillMaxWidth()
+        ) {
+            if (drink.image != null) {
+                AsyncImage(
+                    model = drink.image,
+                    placeholder = painterResource(R.drawable.hourglass),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(toolbarHeight),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
 
         LargeTopAppBar(
+            collapsedHeight = toolbarHeightMin,
+            expandedHeight = toolbarHeightMax,
+            scrollBehavior = scrollBehavior,
             title = {
                 Column {
-                    Text(
-                        text = drink.name,
+                    StrokeText(
+                        content = drink.name,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.ExtraBold
                         ),
-                        modifier = Modifier
-                            .graphicsLayer {
-                                alpha = collapse
-                            }
+                        colorFront = MaterialTheme.colorScheme.onTertiary,
+                        colorBack = MaterialTheme.colorScheme.tertiary
                     )
-                    Text(text = drink.category, style = MaterialTheme.typography.bodyLarge)
+                    StrokeText(
+                        content = drink.category,
+                        style = MaterialTheme.typography.bodyLarge,
+                        colorFront = MaterialTheme.colorScheme.onTertiary,
+                        colorBack = MaterialTheme.colorScheme.tertiary
+                    )
                 }
             },
             navigationIcon = {
@@ -124,14 +128,11 @@ fun TopAppBar(
                     }
                 }
             },
-            scrollBehavior = scrollBehavior,
             colors = TopAppBarDefaults.largeTopAppBarColors(
                 containerColor = Color.Transparent,
                 scrolledContainerColor = MaterialTheme.colorScheme.surface
             ),
             modifier = Modifier
-                .fillMaxWidth()
-                .height(toolbarHeightDp)
                 .background(Color.Transparent)
         )
     }
