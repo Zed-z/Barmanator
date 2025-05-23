@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -21,6 +23,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
@@ -163,14 +166,22 @@ fun DrinkDetail(
             )
         },
         floatingActionButton = {
-            Timer(
-                viewModel = viewModel<TimerViewModel>(
-                    viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner,
-                    key = "timer-${drink.id}",
-                    initializer = {
-                        TimerViewModel(1 * 60)
-                    })
-            )
+            Row {
+                Timer(
+                    viewModel = viewModel<TimerViewModel>(
+                        viewModelStoreOwner = LocalActivity.current as ViewModelStoreOwner,
+                        key = "timer-${drink.id}",
+                        initializer = {
+                            TimerViewModel(1 * 60)
+                        })
+                )
+                Spacer(modifier = Modifier.width(48.dp))
+                SmsButton(
+                    message = drink.ingredientsMeasutes.joinToString(separator = "\n") { (i, m) ->
+                        "$i ($m)"
+                    }
+                )
+            }
         },
         floatingActionButtonPosition = FabPosition.Center
     ) { paddingValues ->
@@ -208,13 +219,6 @@ fun DrinkDetail(
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(32.dp))
-            SmsButton(
-                buttonText = "Send Ingredients via SMS...",
-                message = drink.ingredientsMeasutes.joinToString(separator = "\n") { (i, m) ->
-                    "$i ($m)"
-                }
-            )
             Spacer(modifier = Modifier.height(100.dp))
         }
     }

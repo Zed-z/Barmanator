@@ -8,7 +8,7 @@
    version="1.1"
    id="svg1"
    inkscape:version="1.4 (86a8ad7, 2024-10-11)"
-   sodipodi:docname="hourglass.svg"
+   sodipodi:docname="sms.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,9 +24,9 @@
      inkscape:deskcolor="#191919"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="2.0334082"
-     inkscape:cx="134.74914"
-     inkscape:cy="224.49994"
+     inkscape:zoom="1.0167041"
+     inkscape:cx="-157.37126"
+     inkscape:cy="291.62861"
      inkscape:window-width="2560"
      inkscape:window-height="1369"
      inkscape:window-x="1912"
@@ -50,6 +50,40 @@
   </sodipodi:namedview>
   <defs
      id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect2"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,10,0,1 @ F,0,0,1,0,10,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,10.000001,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect4"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
     <inkscape:path-effect
        effect="fillet_chamfer"
        id="path-effect1"
@@ -224,39 +258,9 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke-width:0.688578;stroke-linecap:square;paint-order:markers fill stroke"
+    <path
        id="rect1"
-       width="50"
-       height="7.2916665"
-       x="25"
-       y="15" />
-    <path
-       id="path1-5"
-       style="fill:#ffffff;fill-opacity:1;stroke-width:0.960066;stroke-linecap:square;paint-order:markers fill stroke"
-       d="m 27.500142,20.833361 a 22.500001,28 0 0 0 22.499919,28.000101 22.500001,28 0 0 0 22.49992,-28.000101 z m 4.999695,2.333191 H 67.500285 A 17.5,22.166667 0 0 1 50.000061,45.333072 17.5,22.166667 0 0 1 32.499837,23.166552 Z" />
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke-width:0.923825;stroke-linecap:square;paint-order:markers fill stroke"
-       id="rect2"
-       width="10"
-       height="8.166667"
-       x="45"
-       y="46.5" />
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke-width:0.688578;stroke-linecap:square;paint-order:markers fill stroke"
-       id="rect3"
-       width="50"
-       height="7.2916665"
-       x="-75"
-       y="-85"
-       transform="scale(-1)" />
-    <path
-       id="path3"
-       style="fill:#ffffff;fill-opacity:1;stroke-width:0.960066;stroke-linecap:square;paint-order:markers fill stroke"
-       d="M 50.000224,51.166426 A 22.500001,28 0 0 0 27.500304,79.166525 H 72.500143 A 22.500001,28 0 0 0 50.000224,51.166426 Z m 0,3.499787 A 17.5,22.166667 0 0 1 67.500448,76.833334 H 32.5 A 17.5,22.166667 0 0 1 50.000224,54.666213 Z" />
-    <path
-       id="path4"
-       style="fill:#ffffff;fill-opacity:1;stroke-width:0.624866;stroke-linecap:square;paint-order:markers fill stroke"
-       d="m 42.001841,62.746393 c -1.065422,0.0142 -2.358132,0.259767 -3.663213,0.611332 A 15,17.791671 0 0 0 34.999685,74.499768 H 64.999792 A 15,17.791671 0 0 0 61.813294,63.541607 c -0.352115,-0.05106 -0.715297,-0.08735 -1.091665,-0.101888 -1.826365,-0.07056 -5.178654,1.594012 -6.971796,1.726682 -5.413032,0.400493 -6.297392,-1.459411 -10.649222,-2.333191 -0.326362,-0.06553 -0.696227,-0.09218 -1.09877,-0.08682 z" />
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-variant-east-asian:normal;font-feature-settings:normal;font-variation-settings:normal;text-indent:0;text-align:start;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;shape-margin:0;inline-size:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;paint-order:stroke fill markers;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate;stop-color:#000000;stop-opacity:1"
+       d="M 25.000024 15.000118 A 10 10 0 0 0 15.000118 25.000024 L 15.000118 59.999955 A 10.000001 10.000001 0 0 0 25.000024 69.999862 L 69.999862 69.999862 L 84.99998 84.99998 L 84.99998 25.000024 A 10 10 0 0 0 75.000073 15.000118 L 25.000024 15.000118 z M 30.000236 27.999841 L 69.999862 27.999841 C 71.661862 27.999841 73.000195 29.338175 73.000195 31.000175 L 73.000195 34.999931 C 73.000195 36.661931 71.661862 37.999748 69.999862 37.999748 L 30.000236 37.999748 C 28.338236 37.999748 26.999902 36.661931 26.999902 34.999931 L 26.999902 31.000175 C 26.999902 29.338175 28.338236 27.999841 30.000236 27.999841 z M 30.000236 47.000232 L 69.999862 47.000232 C 71.661862 47.000232 73.000195 48.338049 73.000195 50.000049 L 73.000195 53.999805 C 73.000195 55.661805 71.661862 57.000138 69.999862 57.000138 L 30.000236 57.000138 C 28.338236 57.000138 26.999902 55.661805 26.999902 53.999805 L 26.999902 50.000049 C 26.999902 48.338049 28.338236 47.000232 30.000236 47.000232 z " />
   </g>
 </svg>
