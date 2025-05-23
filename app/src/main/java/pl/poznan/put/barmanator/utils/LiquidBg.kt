@@ -29,31 +29,6 @@ import kotlin.math.sin
 import android.view.animation.OvershootInterpolator
 
 @Composable
-fun rememberDeviceTiltX(context: Context): Float {
-    val tilt = remember { mutableFloatStateOf(0f) }
-    val sensorManager = remember { context.getSystemService(Context.SENSOR_SERVICE) as SensorManager }
-    val gravitySensor = remember { sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) }
-
-    DisposableEffect(Unit) {
-        val listener = object : SensorEventListener {
-            override fun onSensorChanged(event: SensorEvent) {
-                val x = event.values[0]
-                tilt.floatValue = (x / 9.81f).coerceIn(-1f, 1f) // normalize to <-1, 1>
-            }
-
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-        }
-
-        sensorManager.registerListener(listener, gravitySensor, SensorManager.SENSOR_DELAY_UI)
-        onDispose {
-            sensorManager.unregisterListener(listener)
-        }
-    }
-
-    return tilt.floatValue
-}
-
-@Composable
 fun LiquidBg(
     modifier: Modifier = Modifier,
     waveColor: Color = Color(0xFF871616),
