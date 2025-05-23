@@ -158,7 +158,7 @@ fun Timer(
                 timePickerVisible = true
             },
             containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.primaryContainer
+            contentColor = MaterialTheme.colorScheme.onPrimary
         ) {
             Icon(
                 modifier = Modifier.size(24.dp),
@@ -179,7 +179,7 @@ fun Timer(
                 }
             },
             containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
             icon = {
                 Icon(
                     modifier = Modifier.size(24.dp),
@@ -207,7 +207,7 @@ fun Timer(
                 viewModel.setRunning(false)
             },
             containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.primaryContainer
+            contentColor = MaterialTheme.colorScheme.onPrimary
         ) {
             Icon(
                 modifier = Modifier.size(24.dp),

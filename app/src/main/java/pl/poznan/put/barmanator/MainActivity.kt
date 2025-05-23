@@ -130,9 +130,16 @@ fun MainScreen(drinks: List<Drink>) {
                 ModalDrawerSheet {
                     Spacer(Modifier.height(16.dp))
                     tabs.forEachIndexed { index, tab ->
+                        val selected = pagerState.currentPage == index
                         NavigationDrawerItem(
-                            label = { Text(tab.title) },
-                            selected = pagerState.currentPage == index,
+                            label = { Text(
+                                tab.title,
+                                color = if (selected)
+                                    MaterialTheme.colorScheme.onPrimary
+                                else
+                                    MaterialTheme.colorScheme.primary
+                            ) },
+                            selected = selected,
                             onClick = {
                                 coroutineScope.launch {
                                     pagerState.animateScrollToPage(index)
@@ -144,7 +151,10 @@ fun MainScreen(drinks: List<Drink>) {
                                     modifier = Modifier.size(48.dp),
                                     painter = painterResource(id = tab.iconRes),
                                     contentDescription = tab.title,
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = if (selected)
+                                        MaterialTheme.colorScheme.onPrimary
+                                    else
+                                        MaterialTheme.colorScheme.primary
                                 )
                             }
                         )
@@ -162,7 +172,11 @@ fun MainScreen(drinks: List<Drink>) {
                             IconButton(onClick = {
                                 coroutineScope.launch { drawerState.open() }
                             }) {
-                                Icon(Icons.Filled.Menu, contentDescription = "Menu")
+                                Icon(
+                                    Icons.Filled.Menu,
+                                    contentDescription = "Menu",
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
                             }
                         },
                         colors = TopAppBarDefaults.mediumTopAppBarColors(
