@@ -121,7 +121,7 @@ fun DrinkListScreenPreview() {
 @Composable
 fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier, filter: (Drink) -> Boolean = { true }) {
 
-    var query by remember {mutableStateOf("")}
+    var query by rememberSaveable {mutableStateOf("")}
     var dat = LocalDatabase.current
     var refreshTrigger by remember {  mutableIntStateOf(0) }
     var actualDrinks  = remember(refreshTrigger)  {mutableStateOf(dat.getDrinks()) }
