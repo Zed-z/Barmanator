@@ -67,7 +67,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             Box {
                 Image(
                     modifier = Modifier
-                        .size(500.dp)
+                        .size(480.dp)
                         .graphicsLayer {
                             rotationZ = tiltX * 45f
                             translationY = glassOffsetY.value
@@ -77,7 +77,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 )
                 Image(
                     modifier = Modifier
-                        .size(500.dp)
+                        .size(480.dp)
                         .graphicsLayer {
                             rotationZ = tiltX * 45f
                             translationY = drinkOffsetY.value
