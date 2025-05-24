@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -127,7 +128,7 @@ fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier, filter: 
     var actualDrinks  = remember(refreshTrigger)  {mutableStateOf(dat.getDrinks()) }
 
     val configuration  = LocalConfiguration.current
-    val isTablet = configuration.screenWidthDp >= 600
+    val isTablet = configuration.smallestScreenWidthDp >= 600
 
     // TODO: make this persistent when changing tabs
     var selectedDrinkHistory by rememberSaveable { mutableStateOf(emptyList<Long>()) }
@@ -155,12 +156,13 @@ fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier, filter: 
 
     Scaffold(
         modifier.fillMaxSize(),
+        floatingActionButtonPosition = if (isTablet) FabPosition.Start else FabPosition.Center,
         floatingActionButton = {
             if (isTablet || selectedDrinkId == null) {
                 Box(
-                    modifier = Modifier
-                        .padding(start=32.dp, end=16.dp)
-                        .fillMaxWidth()
+                    modifier = if (isTablet)
+                        Modifier.fillMaxWidth(fraction=0.3f)
+                        else Modifier.fillMaxWidth().padding(horizontal=10.dp)
                 ) {
                     TextField(
                         value = query,
@@ -234,7 +236,7 @@ fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier, filter: 
                     drink?.let {
                         DrinkDetail(
                             isTablet = isTablet,
-                            modifier = Modifier.weight(3f),
+                            modifier = Modifier.weight(2f),
                             drink = it,
                             onBack = {
                                 if (selectedDrinkHistory.size > 1) {
