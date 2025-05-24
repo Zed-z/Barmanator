@@ -131,7 +131,6 @@ fun DrinkListScreen(drinks: List<Drink>, modifier: Modifier = Modifier, filter: 
     val isTablet = configuration.smallestScreenWidthDp >= 600
     val isTabletWide = configuration.screenWidthDp >= 1000
 
-    // TODO: make this persistent when changing tabs
     var selectedDrinkHistory by rememberSaveable { mutableStateOf(emptyList<Long>()) }
     val selectedDrinkId = selectedDrinkHistory.lastOrNull()
 
