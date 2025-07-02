@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    id("com.google.gms.google-services")
 
 
 }
@@ -46,6 +47,10 @@ android {
 
 dependencies {
 
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
     val composeBom = platform("androidx.compose:compose-bom:2025.02.00")
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -68,6 +73,9 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.ktor.serialization.kotlinx.json)
     implementation(libs.kotlinx.serialization.json)
+
+
+
 
 
     // Android Studio Preview support
@@ -128,4 +136,14 @@ dependencies {
     implementation(libs.accompanist.systemuicontroller)
 
     implementation(libs.accompanist.systemuicontroller)
+
+    implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
+
+
+    implementation("com.google.firebase:firebase-analytics")
+
+    implementation("com.google.android.gms:play-services-auth:21.3.0") // najnowsza wersja Google Sign-In
+    implementation("com.google.android.gms:play-services-identity:18.0.1") // Identity Services (One Tap)
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 }

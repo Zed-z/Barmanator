@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,13 +53,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import pl.poznan.put.barmanator.data.Drink
 import pl.poznan.put.barmanator.utils.Timer
 import pl.poznan.put.barmanator.utils.TimerViewModel
 import pl.poznan.put.barmanator.R
+import pl.poznan.put.barmanator.data.Database
+import pl.poznan.put.barmanator.utils.LocalDatabase
 import pl.poznan.put.barmanator.utils.SmsButton
 import pl.poznan.put.barmanator.utils.StrokeText
 import kotlin.math.max
@@ -80,12 +86,18 @@ fun TopAppBar(
 
     println("Toolbar height: $toolbarHeight")
 
+    val dat = LocalDatabase.current
+
     Box {
         Box(
             modifier = Modifier
                 .height(toolbarHeight)
                 .fillMaxWidth()
+                .zIndex(1f),
+
+
         ) {
+            val database = LocalDatabase.current
             if (drink.image != null) {
                 AsyncImage(
                     model = drink.image,
@@ -94,9 +106,43 @@ fun TopAppBar(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(toolbarHeight),
-                    contentScale = ContentScale.Crop
-                )
+                    contentScale = ContentScale.Crop,
+
+                    )
+
+                val currentUser = FirebaseAuth.getInstance().currentUser
+
+                if (currentUser != null) {
+                    IconButton(
+                        onClick = {
+                            println("kicia")
+
+
+
+                            if (dat.favourites.contains(drink.name))
+                                dat.favourites.remove(drink.name)
+                            else
+                                dat.favourites.add(drink.name)
+
+                            for (s in dat.favourites) {
+                                println(s)
+                            }
+
+                            saveFavoritesToFirestore(database)
+                        },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp)
+                            .size(36.dp).zIndex(2f) // większy hitbox dla wygody
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.star),
+                            contentDescription = "Icon"
+                        )
+                    }
+                }
             }
+
         }
 
         LargeTopAppBar(
@@ -123,10 +169,12 @@ fun TopAppBar(
             },
             navigationIcon = {
                 if (!isTablet) {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = onBack, modifier = Modifier.zIndex(3f)) {
+
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
+                            modifier =  Modifier.zIndex(3f)
                         )
                     }
                 }
@@ -222,4 +270,13 @@ fun DrinkDetail(
             Spacer(modifier = Modifier.height(100.dp))
         }
     }
+}
+
+private fun saveFavoritesToFirestore(database : Database) {
+    val auth = FirebaseAuth.getInstance()
+    val firestore = FirebaseFirestore.getInstance()
+
+    val user = auth.currentUser ?: return
+    firestore.collection("users").document(user.uid)
+        .set(mapOf("favoriteDrinks" to database.favourites.toList()))
 }

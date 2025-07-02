@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.BitmapFactory
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import io.ktor.client.*
@@ -95,6 +96,8 @@ data class Drink(
 
 )
 
+
+
 class CocktailDatabase
 
 
@@ -144,6 +147,9 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
         const val STRMEASURE15 = "strMeasure15"
         const val STRCREATIVECOMMONSCONFIRMED = "strCreativeCommonsConfirmed"
     }
+
+
+    var favourites = mutableStateListOf<String>()
 
     override fun onCreate(db: SQLiteDatabase) {
         val query = """
@@ -473,6 +479,8 @@ class Database(context: Context): SQLiteOpenHelper(context, "Database", null, 1)
                                     "strCreativeCommonsConfirmed",
                                     cocktail.strCreativeCommonsConfirmed
                                 )
+
+
 
                             }
 
